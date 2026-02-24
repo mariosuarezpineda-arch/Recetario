@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>El recetario de Mario y Esther</title>
+    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-firestore-compat.js"></script>
+    
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background-color: #f0f2f5; padding: 20px; color: #333; }
+        .contenedor { max-width: 1000px; margin: auto; }
+        h1 { color: #d35400; text-align: center; }
+        .formulario, .filtros-seccion { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); margin-bottom: 25px; }
+        .fila { display: flex; gap: 15px; flex-wrap: wrap; margin-bottom: 15px; }
+        .fila > * { flex: 1; min-width: 200px; }
+        input, select { border: 1px solid #ddd; border-radius: 6px; padding: 12px; width: 100%; box-sizing: border-box; }
+        button { background-color: #27ae60; color: white; border: none; font-weight: bold; cursor: pointer; border-radius: 6px; padding: 12px; transition: 0.3s; }
+        button:hover { background-color: #219150; }
+        .btn-cancelar { background-color: #95a5a6; margin-top: 10px; }
+        
+        .galeria { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px; }
+        .tarjeta { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.08); display: flex; flex-direction: column; }
+        .tarjeta img { width: 100%; height: 200px; object-fit: cover; }
+        .info { padding: 15px; flex-grow: 1; }
+        .tag { font-size: 0.7em; color: white; padding: 4px 10px; border-radius: 20px; margin-right: 5px; display: inline-block; margin-top: 5px; }
+        .tag-ing { background: #e67e22; } .tag-ela { background: #8e44ad; } .tag-tip { background: #2980b9; }
+        .acciones { display: flex; border-top: 1px solid #eee; }
+        .acciones button { flex: 1; border-radius: 0; padding: 10px; font-size: 0.8em; }
+        .edit { background: #f39c12; } .del { background: #c0392b; }
+    </style>
+</head>
+<body>
+
+<div class="contenedor">
+    <h1>El recetario de Mario y Esther 🍲</h1>
+
+    <div class="formulario">
+        <h3 id="tituloForm">Nueva Receta</h3>
+        <input type="hidden" id="idDoc">
+        <div class="fila">
+            <input type="text" id="nombre" placeholder="Nombre de la receta">
+            <input type="text" id="video" placeholder="Link del vídeo">
+        </div>
+        <div class="fila">
+            <input type="file" id="foto" accept="image/*">
+            <select id="ingrediente">
+                <option value="Pollo">Pollo</option>
+		<option value="Pulpo">Pulpo</option>
+                <option value="Pescado">Pescado</option>
+		<option value="Verduras">Verduras</option>
+		<option value="Legumbres">Legumbres</option>
+		<option value="Tostas">Tostas</option>
+		<option value="Hojaldres">Hojaldres</option>
+                <option value="Queso">Queso</option>
+		<option value="Pasta">Pasta</option>
+            </select>
+        </div>
+        <div class="fila">
+            <select id="elaboracion">
+                <option value="Horno">Horno</option>
+		<option value="Plancha">Plancha</option>
+                <option value="Airfryer">Airfryer</option>
+		<option value="Sartén">Sartén / Guiso</option>
+		<option value="Microondas">Microondas</option>
+		<option value="Sin cocinado">Sin cocinado</option>
+            </select>
+            <select id="tipo">
+                <option value="Entrante">Entrante</option>
+		<option value="Plato Principal">Plato Principal</option>
+                <option value="Postre">Postre</option>
+		<option value="Acompañamiento">Acompañamiento</option>
+            </select>
+        </div>
+        <button onclick="enviarDatos()" id="btnAccion" style="width: 100%;">Guardar Receta</button>
+        <button onclick="limpiarFormulario()" id="btnCan" class="btn-cancelar" style="display:none; width: 100%;">Cancelar Edición</button>
+    </div>
+
+    <div class="filtros-seccion">
+        <h3 style="margin-top:0;">Filtrar Recetas</h3>
+        <div class="fila">
+            <select id="fIng" onchange="renderizar()">
+                <option value="Todos">Todos los Ingredientes</option>
+                <option value="Pollo">Pollo</option>
+		<option value="Pulpo">Pulpo</option>
+                <option value="Pescado">Pescado</option>
+		<option value="Verduras">Verduras</option>
+		<option value="Legumbres">Legumbres</option>
+		<option value="Tostas">Tostas</option>
+		<option value="Hojaldres">Hojaldres</option>
+                <option value="Queso">Queso</option>
+		<option value="Pasta">Pasta</option>
+            </select>
+            <select id="fEla" onchange="renderizar()">
+                <option value="Todas">Todas las Elaboraciones</option>
+                <option value="Horno">Horno</option>
+		<option value="Plancha">Plancha</option>
+                <option value="Airfryer">Airfryer</option>
+		<option value="Sartén">Sartén / Guiso</option>
+		<option value="Microondas">Microondas</option>
+		<option value="Sin cocinado">Sin cocinado</option>
+            </select>
+            <select id="fTip" onchange="renderizar()">
+                <option value="Todos">Todos los Platos</option>
+                <option value="Entrante">Entrante</option>
+		<option value="Plato Principal">Plato Principal</option>
+                <option value="Postre">Postre</option>
+		<option value="Acompañamiento">Acompañamiento</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="galeria" id="listaRecetas"></div>
+</div>
+
+<script>
+    // --- 1. CONFIGURACIÓN FIREBASE ---
+    const firebaseConfig = {
+        apiKey: "AIzaSyA4kvu1bj--OtEgQ2Z6-ia34Gk249tPdQc",
+        authDomain: "TU_PROYECTO.firebaseapp.com",
+        projectId: "TU_PROYECTO_ID",
+        storageBucket: "TU_PROYECTO.appspot.com",
+        messagingSenderId: "TU_ID",
+        appId: "TU_APP_ID"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+    let recetasLocales = []; // Para filtrar sin recargar de la nube
+    let imgTemp = "";
+
+    // --- 2. ESCUCHAR CAMBIOS ---
+    db.collection("recetas").orderBy("fecha", "desc").onSnapshot((snapshot) => {
+        recetasLocales = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        renderizar();
+    });
+
+    // --- 3. MOSTRAR Y FILTRAR ---
+    function renderizar() {
+        const caja = document.getElementById('listaRecetas');
+        const fi = document.getElementById('fIng').value;
+        const fe = document.getElementById('fEla').value;
+        const ft = document.getElementById('fTip').value;
+
+        caja.innerHTML = '';
+        
+        recetasLocales.forEach(r => {
+            const cumpleI = (fi === 'Todos' || r.ingrediente === fi);
+            const cumpleE = (fe === 'Todas' || r.elaboracion === fe);
+            const cumpleT = (ft === 'Todos' || r.tipo === ft);
+
+            if(cumpleI && cumpleE && cumpleT) {
+                caja.innerHTML += `
+                    <div class="tarjeta">
+                        <img src="${r.imagen || 'https://via.placeholder.com/300'}">
+                        <div class="info">
+                            <h3 style="margin:0;">${r.nombre}</h3>
+                            <div class="etiquetas">
+                                <span class="tag tag-ing">${r.ingrediente}</span>
+                                <span class="tag tag-ela">${r.elaboracion}</span>
+                                <span class="tag tag-tip">${r.tipo}</span>
+                            </div>
+                            ${r.video ? `<br><a href="${r.video}" target="_blank" style="color:#2980b9; text-decoration:none; font-weight:bold; font-size:0.9em;">🎬 Ver vídeo</a>` : ''}
+                        </div>
+                        <div class="acciones">
+                            <button class="edit" onclick="prepararEdicion('${r.id}')">Editar</button>
+                            <button class="del" onclick="borrarReceta('${r.id}')">Borrar</button>
+                        </div>
+                    </div>`;
+            }
+        });
+    }
+
+    // --- 4. GUARDAR / EDITAR ---
+    async function enviarDatos() {
+        const id = document.getElementById('idDoc').value;
+        const nombre = document.getElementById('nombre').value;
+        const archivo = document.getElementById('foto').files[0];
+        
+        if(!nombre) return alert("El nombre es obligatorio");
+
+        let imgFinal = imgTemp || "https://via.placeholder.com/300";
+        if(archivo) imgFinal = await toBase64(archivo);
+
+        const datos = {
+            nombre: nombre,
+            video: document.getElementById('video').value,
+            ingrediente: document.getElementById('ingrediente').value,
+            elaboracion: document.getElementById('elaboracion').value,
+            tipo: document.getElementById('tipo').value,
+            imagen: imgFinal,
+            fecha: new Date()
+        };
+
+        id ? await db.collection("recetas").doc(id).update(datos) : await db.collection("recetas").add(datos);
+        limpiarFormulario();
+    }
+
+    // --- FUNCIONES EXTRA ---
+    async function prepararEdicion(id) {
+        const r = recetasLocales.find(receta => receta.id === id);
+        document.getElementById('idDoc').value = id;
+        document.getElementById('nombre').value = r.nombre;
+        document.getElementById('video').value = r.video;
+        document.getElementById('ingrediente').value = r.ingrediente;
+        document.getElementById('elaboracion').value = r.elaboracion;
+        document.getElementById('tipo').value = r.tipo;
+        imgTemp = r.imagen;
+        document.getElementById('tituloForm').innerText = "Editando Receta";
+        document.getElementById('btnAccion').innerText = "Guardar Cambios";
+        document.getElementById('btnCan').style.display = "block";
+        window.scrollTo(0,0);
+    }
+
+    function borrarReceta(id) {
+        if(confirm("¿Seguro?")) db.collection("recetas").doc(id).delete();
+    }
+
+    function limpiarFormulario() {
+        document.getElementById('idDoc').value = '';
+        document.getElementById('nombre').value = '';
+        document.getElementById('video').value = '';
+        document.getElementById('foto').value = '';
+        document.getElementById('btnCan').style.display = "none";
+        document.getElementById('tituloForm').innerText = "Nueva Receta";
+        document.getElementById('btnAccion').innerText = "Guardar Receta";
+        imgTemp = "";
+    }
+
+    const toBase64 = file => new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = error => reject(error);
+    });
+</script>
+</body>
+</html>
