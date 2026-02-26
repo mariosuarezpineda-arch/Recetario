@@ -6,12 +6,13 @@
 
 	<meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
-	<link rel="apple-touch-icon" href="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTOwlFPrvwELuB4kXjg2P7t_OIPWSMKIg6fhFv-DVI-2oKIhhZUyDbxPpc&s">
+	<link rel="apple-touch-icon" href="https://m.media-amazon.com/images/I/71Hyp05ySsL._AC_UF1000,1000_QL80_.jpg">
     <title>El recetario de Mario y Esther</title>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-firestore-compat.js"></script>
     
     <style>
+        /* --- ESTILOS GENERALES --- */
         body { font-family: 'Segoe UI', sans-serif; background-color: #f0f2f5; padding: 20px; color: #333; }
         .contenedor { max-width: 1000px; margin: auto; }
         h1 { color: #d35400; text-align: center; }
@@ -32,6 +33,93 @@
         .acciones { display: flex; border-top: 1px solid #eee; }
         .acciones button { flex: 1; border-radius: 0; padding: 10px; font-size: 0.8em; }
         .edit { background: #f39c12; } .del { background: #c0392b; }
+
+        /* --- CONFIGURACIÓN DEL CHAT DINÁMICO (PC MEDIA PANTALLA / MÓVIL TOTAL) --- */
+#chat-container { 
+    position: fixed !important; 
+    bottom: 0;       /* Pegado abajo */
+    right: 0;        /* Pegado a la derecha */
+    width: 50vw;     /* MEDIA PANTALLA en PC */
+    height: 100vh;   /* TODA LA ALTURA en PC */
+    background: white; 
+    box-shadow: -5px 0 30px rgba(0,0,0,0.3); 
+    display: none; 
+    flex-direction: column; 
+    overflow: hidden; 
+    z-index: 10000; 
+    border-left: 2px solid #d35400; /* Separador elegante */
+    transition: width 0.3s ease;    /* Animación suave al abrir */
+}
+
+/* AJUSTE PARA MÓVILES */
+@media (max-width: 768px) {
+    #chat-container { 
+        width: 100vw;  /* PANTALLA COMPLETA en móvil */
+        height: 100%;
+        bottom: 0;
+        right: 0;
+    }
+    #chat-header {
+        padding: 25px 15px; /* Más espacio para dedos en móvil */
+    }
+}
+
+#chat-btn-open { 
+    position: fixed !important; 
+    bottom: 25px; 
+    right: 25px; 
+    background: #d35400; 
+    color: white; 
+    border: none; 
+    border-radius: 50%; 
+    width: 70px; 
+    height: 70px; 
+    cursor: pointer; 
+    font-size: 32px; 
+    box-shadow: 0 4px 20px rgba(0,0,0,0.4); 
+    z-index: 10001; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#chat-header { 
+    background-color: #d35400 !important; 
+    color: white !important;
+    padding: 20px; 
+    font-weight: bold; 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center;
+    font-size: 1.3em;
+}
+
+#chat-messages { 
+    flex: 1; 
+    overflow-y: auto; 
+    padding: 30px; /* Más aire para leer mejor los valores nutricionales */
+    display: flex; 
+    flex-direction: column; 
+    gap: 20px; 
+    background: #ffffff; 
+    font-size: 1.1em;
+    line-height: 1.7;
+}
+
+/* Burbujas adaptadas al nuevo ancho */
+.msg { 
+    padding: 15px 20px; 
+    border-radius: 12px; 
+    max-width: 90%; /* Aprovechamos más el ancho */
+}
+
+        .msg { padding: 12px 18px; border-radius: 12px; max-width: 85%; }
+        .user-msg { background: #e1f5fe; align-self: flex-end; }
+        .bot-msg { 
+    background: #f8f9fa; 
+    align-self: flex-start; 
+    border-left: 4px solid #d35400; /* Una línea naranja lateral para que parezca una ficha de receta */
+}
     </style>
 </head>
 <body>
@@ -50,38 +138,38 @@
             <input type="file" id="foto" accept="image/*">
             <select id="ingrediente">
                 <option value="Pollo">Pollo</option>
-		<option value="Pulpo">Pulpo</option>
+                <option value="Pulpo">Pulpo</option>
                 <option value="Pescado">Pescado</option>
-		<option value="Verduras">Verduras</option>
-		<option value="Legumbres">Legumbres</option>
-		<option value="Tostas">Tostas</option>
-		<option value="Hojaldres">Hojaldres</option>
+                <option value="Verduras">Verduras</option>
+                <option value="Legumbres">Legumbres</option>
+                <option value="Tostas">Tostas</option>
+                <option value="Hojaldres">Hojaldres</option>
                 <option value="Queso">Queso</option>
-		<option value="Pasta">Pasta</option>
-		<option value="Coulant">Coulant</option>
-		<option value="Arroz">Arroz</option>
-		<option value="Ensaladas">Ensaladas</option>
-		<option value="Salchichas">Salchichas</option>
-		<option value="Repostería">Repostería</option>
-		<option value="Guisos">Guisos</option>
-		<option value="Patatas">Patatas</option>
+                <option value="Pasta">Pasta</option>
+                <option value="Coulant">Coulant</option>
+                <option value="Arroz">Arroz</option>
+                <option value="Ensaladas">Ensaladas</option>
+                <option value="Salchichas">Salchichas</option>
+                <option value="Repostería">Repostería</option>
+                <option value="Guisos">Guisos</option>
+                <option value="Patatas">Patatas</option>
             </select>
         </div>
         <div class="fila">
             <select id="elaboracion">
                 <option value="Horno">Horno</option>
-		<option value="Plancha">Plancha</option>
+                <option value="Plancha">Plancha</option>
                 <option value="Airfryer">Airfryer</option>
-		<option value="Sartén">Sartén / Guiso</option>
-		<option value="Microondas">Microondas</option>
-		<option value="Sin cocinado">Sin cocinado</option>
+                <option value="Sartén">Sartén / Guiso</option>
+                <option value="Microondas">Microondas</option>
+                <option value="Sin cocinado">Sin cocinado</option>
             </select>
             <select id="tipo">
                 <option value="Entrante">Entrante</option>
-		<option value="Plato Principal">Plato Principal</option>
+                <option value="Plato Principal">Plato Principal</option>
                 <option value="Postre">Postre</option>
-		<option value="Acompañamiento">Acompañamiento</option>
-				<option value="Merienda">Merienda</option>
+                <option value="Acompañamiento">Acompañamiento</option>
+                <option value="Merienda">Merienda</option>
             </select>
         </div>
         <button onclick="enviarDatos()" id="btnAccion" style="width: 100%;">Guardar Receta</button>
@@ -94,38 +182,38 @@
             <select id="fIng" onchange="renderizar()">
                 <option value="Todos">Todos los Ingredientes</option>
                 <option value="Pollo">Pollo</option>
-		<option value="Pulpo">Pulpo</option>
+                <option value="Pulpo">Pulpo</option>
                 <option value="Pescado">Pescado</option>
-		<option value="Verduras">Verduras</option>
-		<option value="Legumbres">Legumbres</option>
-		<option value="Tostas">Tostas</option>
-		<option value="Hojaldres">Hojaldres</option>
+                <option value="Verduras">Verduras</option>
+                <option value="Legumbres">Legumbres</option>
+                <option value="Tostas">Tostas</option>
+                <option value="Hojaldres">Hojaldres</option>
                 <option value="Queso">Queso</option>
-		<option value="Pasta">Pasta</option>
-		<option value="Coulant">Coulant</option>
-		<option value="Arroz">Arroz</option>
-		<option value="Ensaladas">Ensaladas</option>
-		<option value="Salchichas">Salchichas</option>
-		<option value="Repostería">Repostería</option>
-		<option value="Guisos">Guisos</option>
-		<option value="Patatas">Patatas</option>
+                <option value="Pasta">Pasta</option>
+                <option value="Coulant">Coulant</option>
+                <option value="Arroz">Arroz</option>
+                <option value="Ensaladas">Ensaladas</option>
+                <option value="Salchichas">Salchichas</option>
+                <option value="Repostería">Repostería</option>
+                <option value="Guisos">Guisos</option>
+                <option value="Patatas">Patatas</option>
             </select>
             <select id="fEla" onchange="renderizar()">
                 <option value="Todas">Todas las Elaboraciones</option>
                 <option value="Horno">Horno</option>
-		<option value="Plancha">Plancha</option>
+                <option value="Plancha">Plancha</option>
                 <option value="Airfryer">Airfryer</option>
-		<option value="Sartén">Sartén / Guiso</option>
-		<option value="Microondas">Microondas</option>
-		<option value="Sin cocinado">Sin cocinado</option>
+                <option value="Sartén">Sartén / Guiso</option>
+                <option value="Microondas">Microondas</option>
+                <option value="Sin cocinado">Sin cocinado</option>
             </select>
             <select id="fTip" onchange="renderizar()">
                 <option value="Todos">Todos los Platos</option>
                 <option value="Entrante">Entrante</option>
-		<option value="Plato Principal">Plato Principal</option>
+                <option value="Plato Principal">Plato Principal</option>
                 <option value="Postre">Postre</option>
-		<option value="Acompañamiento">Acompañamiento</option>
-				<option value="Merienda">Merienda</option>
+                <option value="Acompañamiento">Acompañamiento</option>
+                <option value="Merienda">Merienda</option>
             </select>
         </div>
     </div>
@@ -133,44 +221,50 @@
     <div class="galeria" id="listaRecetas"></div>
 </div>
 
+<button id="chat-btn-open" onclick="toggleChat()">👨‍🍳</button>
+
+<div id="chat-container">
+    <div id="chat-header">
+        <span>👨‍🍳 Chef Experto (Mario y Esther)</span>
+        <span onclick="toggleChat()" style="cursor:pointer; font-size: 28px;">&times;</span>
+    </div>
+    <div id="chat-messages"></div>
+    <div id="chat-input-area" style="display: flex; border-top: 1px solid #eee; padding: 15px; background: #f9f9f9;">
+        <input type="text" id="chat-input" placeholder="¿Qué cocinamos hoy?..." style="flex: 1; border: 1px solid #ddd; padding: 12px; border-radius: 8px; font-size: 16px;">
+        <button onclick="preguntarChef()" style="padding: 12px 25px; margin-left: 10px; background: #27ae60; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer;">Enviar</button>
+    </div>
+</div>
+
 <script>
-    // --- 1. CONFIGURACIÓN FIREBASE ---
+    // --- 1. FIREBASE ---
     const firebaseConfig = {
-  apiKey: "AIzaSyA4kvu1bj--OtEgQ2Z6-ia34Gk249tPdQc",
-  authDomain: "el-recetario-de-mario-y-esther.firebaseapp.com",
-  projectId: "el-recetario-de-mario-y-esther",
-  storageBucket: "el-recetario-de-mario-y-esther.firebasestorage.app",
-  messagingSenderId: "1070923399824",
-  appId: "1:1070923399824:web:6763c4841887cc000c4e15",
-  measurementId: "G-QQ1BVCHYJZ"
-};
+        apiKey: "AIzaSyA4kvu1bj--OtEgQ2Z6-ia34Gk249tPdQc",
+        authDomain: "el-recetario-de-mario-y-esther.firebaseapp.com",
+        projectId: "el-recetario-de-mario-y-esther",
+        storageBucket: "el-recetario-de-mario-y-esther.firebasestorage.app",
+        messagingSenderId: "1070923399824",
+        appId: "1:1070923399824:web:6763c4841887cc000c4e15",
+        measurementId: "G-QQ1BVCHYJZ"
+    };
 
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
-    let recetasLocales = []; // Para filtrar sin recargar de la nube
+    let recetasLocales = [];
     let imgTemp = "";
 
-    // --- 2. ESCUCHAR CAMBIOS ---
     db.collection("recetas").orderBy("fecha", "desc").onSnapshot((snapshot) => {
         recetasLocales = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
         renderizar();
     });
 
-    // --- 3. MOSTRAR Y FILTRAR ---
     function renderizar() {
         const caja = document.getElementById('listaRecetas');
         const fi = document.getElementById('fIng').value;
         const fe = document.getElementById('fEla').value;
         const ft = document.getElementById('fTip').value;
-
         caja.innerHTML = '';
-        
         recetasLocales.forEach(r => {
-            const cumpleI = (fi === 'Todos' || r.ingrediente === fi);
-            const cumpleE = (fe === 'Todas' || r.elaboracion === fe);
-            const cumpleT = (ft === 'Todos' || r.tipo === ft);
-
-            if(cumpleI && cumpleE && cumpleT) {
+            if((fi === 'Todos' || r.ingrediente === fi) && (fe === 'Todas' || r.elaboracion === fe) && (ft === 'Todos' || r.tipo === ft)) {
                 caja.innerHTML += `
                     <div class="tarjeta">
                         <img src="${r.imagen || 'https://via.placeholder.com/300'}">
@@ -192,17 +286,13 @@
         });
     }
 
-    // --- 4. GUARDAR / EDITAR ---
     async function enviarDatos() {
         const id = document.getElementById('idDoc').value;
         const nombre = document.getElementById('nombre').value;
         const archivo = document.getElementById('foto').files[0];
-        
         if(!nombre) return alert("El nombre es obligatorio");
-
         let imgFinal = imgTemp || "https://via.placeholder.com/300";
         if(archivo) imgFinal = await toBase64(archivo);
-
         const datos = {
             nombre: nombre,
             video: document.getElementById('video').value,
@@ -212,12 +302,10 @@
             imagen: imgFinal,
             fecha: new Date()
         };
-
         id ? await db.collection("recetas").doc(id).update(datos) : await db.collection("recetas").add(datos);
         limpiarFormulario();
     }
 
-    // --- FUNCIONES EXTRA ---
     async function prepararEdicion(id) {
         const r = recetasLocales.find(receta => receta.id === id);
         document.getElementById('idDoc').value = id;
@@ -254,10 +342,81 @@
         reader.onload = () => resolve(reader.result);
         reader.onerror = error => reject(error);
     });
+
+    // --- 2. LÓGICA DEL CHAT ---
+    const GROQ_API_KEY = "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"; 
+
+    function toggleChat() {
+        const chat = document.getElementById('chat-container');
+        const input = document.getElementById('chat-input');
+        if (chat.style.display === 'none' || chat.style.display === '') {
+            chat.style.display = 'flex';
+            input.focus();
+        } else {
+            chat.style.display = 'none';
+        }
+    }
+
+    async function preguntarChef() {
+        const input = document.getElementById('chat-input');
+        const box = document.getElementById('chat-messages');
+        const mensaje = input.value.trim();
+        if (!mensaje) return;
+
+        // Mostrar mensaje del usuario
+        box.innerHTML += `<div class="msg user-msg">${mensaje}</div>`;
+        input.value = '';
+        box.scrollTop = box.scrollHeight;
+
+        try {
+            const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${GROQ_API_KEY}`
+                },
+                body: JSON.stringify({
+                    model: "llama-3.3-70b-versatile",
+                    messages: [
+                        { 
+                            role: "system", 
+                            content: `Eres un Chef experto para Mario y Esther. 
+                            Tus respuestas deben seguir esta estructura cuando te pidan una receta:
+                            1. Breve descripción.
+                            2. Ingredientes y Pasos.
+                            3. VALORES NUTRICIONALES: Proporciona calorías, proteínas, grasas e hidratos aproximados por ración.
+                            4. CONSEJOS DEL CHEF: Trucos para mejorar el sabor o la técnica.
+                            5. ENLACES EXTERNOS: Si el usuario pide vídeos, busca en tu base de datos mental y proporciona enlaces sugeridos de YouTube, Instagram o TikTok (usa el formato de enlace HTML <a href='...' target='_blank'>Texto</a>).
+                            Mantén un tono profesional y apasionado por la cocina.` 
+                        },
+                        { role: "user", content: mensaje }
+                    ],
+                    temperature: 0.7
+                })
+            });
+
+            const data = await response.json();
+            if (response.ok) {
+                // Convertimos Markdown y saltos de línea a HTML legible
+                let respuestaIA = data.choices[0].message.content
+                    .replace(/\n/g, '<br>')
+                    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>'); // Negritas
+                
+                box.innerHTML += `<div class="msg bot-msg">${respuestaIA}</div>`;
+            }
+        } catch (error) {
+            box.innerHTML += `<div class="msg bot-msg">¡Oído cocina! Pero parece que hay un problema en los fogones (Error de conexión).</div>`;
+        }
+        box.scrollTop = box.scrollHeight;
+    }
+
+    document.getElementById('chat-input').addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') preguntarChef();
+    });
 </script>
 </body>
-
 </html>
+
 
 
 
