@@ -168,32 +168,44 @@
     });
 
     function renderizar(idEspecifico = null) {
-        const caja = document.getElementById('listaRecetas');
-        const fi = document.getElementById('fIng').value;
-        const fe = document.getElementById('fEla').value;
-        const ft = document.getElementById('fTip').value;
-        caja.innerHTML = '';
-        recetasLocales.forEach(r => {
-            if (idEspecifico ? String(r.id) === String(idEspecifico) : (fi === 'Todos' || r.ingrediente === fi) && (fe === 'Todas' || r.elaboracion === fe) && (ft === 'Todos' || r.tipo === ft)) {
-                const esFav = r.esFavorito === true; 
-                caja.innerHTML += `
-                    <div class="tarjeta" id="receta-${r.id}">
-                        <button class="fav-btn" onclick="toggleFav('${r.id}')">${esFav ? '❤️' : '🤍'}</button>
-                        <img src="${r.imagen || 'https://via.placeholder.com/300'}">
-                        <div class="info">
-                            <h3 style="margin:0;">${r.nombre}</h3>
-                            <span class="tag tag-ing">${r.ingrediente}</span>
-                            <span class="tag tag-ela">${r.elaboracion}</span>
-                            <span class="tag tag-tip">${r.tipo}</span>
-                            ${r.video ? `<br><a href="${r.video}" target="_blank" style="color:#2980b9; font-size:0.85em; text-decoration:none; font-weight:bold; display:block; margin-top:10px;">🎬 Ver Vídeo Original</a>` : ''}
-                            <button onclick="consultarReceta('${r.id}')" style="margin-top:12px; width:100%; background:#27ae60; font-size:0.85em; padding:10px; border-radius:6px; border:none; color:white; cursor:pointer; font-weight:bold;">Preguntar al Chef 👨‍🍳</button>
-                        </div>
-                        <div class="acciones"><button class="edit" onclick="prepararEdicion('${r.id}')">Editar</button><button class="del" onclick="borrarReceta('${r.id}')">Borrar</button></div>
-                    </div>`;
-            }
-        });
-        actualizarSidebarFavs();
-    }
+    const caja = document.getElementById('listaRecetas');
+    const fi = document.getElementById('fIng').value;
+    const fe = document.getElementById('fEla').value;
+    const ft = document.getElementById('fTip').value;
+    caja.innerHTML = '';
+
+    recetasLocales.forEach(r => {
+        if (idEspecifico ? String(r.id) === String(idEspecifico) : (fi === 'Todos' || r.ingrediente === fi) && (fe === 'Todas' || r.elaboracion === fe) && (ft === 'Todos' || r.tipo === ft)) {
+            const esFav = r.esFavorito === true; 
+            
+            // Aquí está la construcción de la tarjeta
+            caja.innerHTML += `
+                <div class="tarjeta" id="receta-${r.id}">
+                    <button class="fav-btn" onclick="toggleFav('${r.id}')">${esFav ? '❤️' : '🤍'}</button>
+                    <img src="${r.imagen || 'https://via.placeholder.com/300'}">
+                    <div class="info">
+                        <h3 style="margin:0;">${r.nombre}</h3>
+                        <span class="tag tag-ing">${r.ingrediente}</span>
+                        <span class="tag tag-ela">${r.elaboracion}</span>
+                        <span class="tag tag-tip">${r.tipo}</span>
+                        
+                        ${r.video ? `<br><a href="${r.video}" target="_blank" style="color:#2980b9; font-size:0.85em; text-decoration:none; font-weight:bold; display:block; margin-top:10px;">🎬 Ver Vídeo Original</a>` : ''}
+                        
+                        <button onclick="consultarReceta('${r.id}')" style="margin-top:12px; width:100%; background:#27ae60; font-size:0.85em; padding:10px; border-radius:6px; border:none; color:white; cursor:pointer; font-weight:bold;">Preguntar al Chef 👨‍🍳</button>
+                        
+                        <button onclick="compartirWhatsApp('${r.id}')" style="margin-top:8px; width:100%; background:#25D366; font-size:0.85em; padding:10px; border-radius:6px; border:none; color:white; cursor:pointer; font-weight:bold; display:flex; align-items:center; justify-content:center; gap:8px;">
+                            Enviar por WhatsApp 📱
+                        </button>
+                    </div>
+                    <div class="acciones">
+                        <button class="edit" onclick="prepararEdicion('${r.id}')">Editar</button>
+                        <button class="del" onclick="borrarReceta('${r.id}')">Borrar</button>
+                    </div>
+                </div>`;
+        }
+    });
+    actualizarSidebarFavs();
+}
 
     async function toggleFav(id) {
         const receta = recetasLocales.find(r => r.id === id);
@@ -400,6 +412,21 @@
     const bloc = document.getElementById('bloc-notas');
     bloc.value = localStorage.getItem('user_notas') || '';
     bloc.addEventListener('input', () => localStorage.setItem('user_notas', bloc.value));
+    
+    function compartirWhatsApp(id) {
+    const r = recetasLocales.find(rec => rec.id === id);
+    if (!r) return;
+
+    const texto = `*¡Mira esta receta de nuestro recetario!* 🍲%0A%0A` +
+                  `*Plato:* ${r.nombre}%0A` +
+                  `*Ingrediente:* ${r.ingrediente}%0A` +
+                  `*Técnica:* ${r.elaboracion}%0A` +
+                  `*Tipo:* ${r.tipo}%0A%0A` +
+                  (r.video ? `🎬 *Vídeo:* ${r.video}%0A%0A` : '') +
+                  `👉 *Ver receta completa:* https://www.youtube.com/results?search_query=receta+${r.nombre.split(' ').join('+')}`;
+
+    window.open(`https://api.whatsapp.com/send?text=${texto}`, '_blank');
+}
 </script>
 </body>
 </html>
