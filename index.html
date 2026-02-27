@@ -17,7 +17,6 @@
         body { font-family: 'Segoe UI', sans-serif; background-color: #f0f2f5; margin: 0; padding: 20px; color: #333; overflow-x: hidden; }
         .layout { display: block; max-width: 1400px; margin: auto; padding-top: 60px; }
 
-        /* Sidebar mejorada */
         .sidebar { 
             width: 300px; position: fixed; top: 0; left: 0;
             transform: translateX(-320px); height: 100%; z-index: 1000; 
@@ -27,19 +26,11 @@
         }
         .sidebar.active { transform: translateX(0); }
 
-        .panel-lateral {
-            background: white; border-radius: 12px; padding: 20px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05); display: flex;
-            flex-direction: column; gap: 25px;
-        }
-
+        .panel-lateral { background: white; border-radius: 12px; padding: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); display: flex; flex-direction: column; gap: 25px; }
         .seccion-lateral h3 { margin: 0 0 15px 0; font-size: 1.1em; color: #d35400; display: flex; align-items: center; gap: 8px; }
-        .sidebar select { margin-bottom: 10px; background: #fdfdfd; border: 1px solid #eee; padding: 8px; border-radius: 5px; width: 100%; }
-
-        /* Bloc de Notas */
+        
         #bloc-notas { width: 100%; height: 120px; border: none; background: #fff9e6; padding: 10px; border-radius: 8px; font-family: inherit; resize: none; box-sizing: border-box; }
 
-        /* Formulario y Contenido */
         h1 { color: #d35400; text-align: center; margin-top: 0; }
         .formulario, .filtros-seccion { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 25px; }
         .fila { display: flex; gap: 15px; flex-wrap: wrap; margin-bottom: 15px; }
@@ -72,17 +63,12 @@
         .user-msg { background: #e1f5fe; align-self: flex-end; }
         .bot-msg { background: #f8f9fa; align-self: flex-start; border-left: 4px solid #d35400; }
 
-        @media (max-width: 900px) {
-            #chat-container { width: 100vw; }
-            .galeria { grid-template-columns: 1fr; }
-        }
+        @media (max-width: 900px) { #chat-container { width: 100vw; } .galeria { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
 
-<button id="menu-toggle" onclick="toggleSidebar()" style="position: fixed; top: 20px; left: 20px; z-index: 1001; background: #d35400; color: white; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer; font-size: 20px;">
-    ☰
-</button>
+<button id="menu-toggle" onclick="toggleSidebar()" style="position: fixed; top: 20px; left: 20px; z-index: 1001; background: #d35400; color: white; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer; font-size: 20px;">☰</button>
 
 <div class="layout">
     <aside class="sidebar">
@@ -106,13 +92,11 @@
                     <option value="Postre">Postre</option>
                 </select>
             </div>
-
             <div class="seccion-lateral">
                 <h3>⭐ Favoritos</h3>
                 <div id="lista-favs" class="lista-favs"></div>
                 <button onclick="renderizar()" style="background:#ecf0f1; color:#7f8c8d; font-size:0.75em; margin-top:10px; padding:5px; width:100%; border:1px solid #ddd;">Mostrar todas</button>
             </div>
-
             <div class="seccion-lateral">
                 <h3>📝 Bloc de Notas</h3>
                 <textarea id="bloc-notas" placeholder="Escribe notas aquí..."></textarea>
@@ -123,57 +107,31 @@
 
     <main class="contenido">
         <h1>El recetario de Mario y Esther 🍲</h1>
-
         <div class="formulario">
             <h3 id="tituloForm">Nueva Receta</h3>
             <input type="hidden" id="idDoc">
-            <div class="fila">
-                <input type="text" id="nombre" placeholder="Nombre de la receta">
-                <input type="text" id="video" placeholder="Link del vídeo">
-            </div>
+            <div class="fila"><input type="text" id="nombre" placeholder="Nombre de la receta"><input type="text" id="video" placeholder="Link del vídeo"></div>
             <div class="fila">
                 <input type="file" id="foto" accept="image/*">
                 <select id="ingrediente">
-                    <option value="Pollo">Pollo</option><option value="Pulpo">Pulpo</option>
-                    <option value="Pescado">Pescado</option><option value="Verduras">Verduras</option>
-                    <option value="Legumbres">Legumbres</option><option value="Tostas">Tostas</option>
-                    <option value="Carne">Carne</option>
+                    <option value="Pollo">Pollo</option><option value="Pulpo">Pulpo</option><option value="Pescado">Pescado</option>
+                    <option value="Verduras">Verduras</option><option value="Legumbres">Legumbres</option><option value="Carne">Carne</option>
                 </select>
             </div>
             <div class="fila">
-                <select id="elaboracion">
-                    <option value="Horno">Horno</option><option value="Plancha">Plancha</option>
-                    <option value="Airfryer">Airfryer</option><option value="Sartén">Sartén / Guiso</option>
-                </select>
-                <select id="tipo">
-                    <option value="Entrante">Entrante</option><option value="Plato Principal">Plato Principal</option>
-                    <option value="Postre">Postre</option>
-                </select>
+                <select id="elaboracion"><option value="Horno">Horno</option><option value="Plancha">Plancha</option><option value="Airfryer">Airfryer</option><option value="Sartén">Sartén / Guiso</option></select>
+                <select id="tipo"><option value="Entrante">Entrante</option><option value="Plato Principal">Plato Principal</option><option value="Postre">Postre</option></select>
             </div>
             <button onclick="enviarDatos()" id="btnAccion" style="width: 100%;">Guardar Receta</button>
             <button onclick="limpiarFormulario()" id="btnCan" style="display:none; width: 100%; background:#95a5a6; margin-top:10px;">Cancelar Edición</button>
         </div>
-
         <div class="filtros-seccion">
-            <h3 style="margin-top:0;">Filtrar Recetas</h3>
             <div class="fila">
-                <select id="fIng" onchange="sincronizarFiltros('fIng')">
-                    <option value="Todos">Todos los Ingredientes</option>
-                    <option value="Pollo">Pollo</option><option value="Pulpo">Pulpo</option>
-                    <option value="Pescado">Pescado</option><option value="Verduras">Verduras</option>
-                    <option value="Legumbres">Legumbres</option><option value="Carne">Carne</option>
-                </select>
-                <select id="fEla" onchange="sincronizarFiltros('fEla')">
-                    <option value="Todas">Todas las Elaboraciones</option>
-                    <option value="Horno">Horno</option><option value="Airfryer">Airfryer</option>
-                </select>
-                <select id="fTip" onchange="sincronizarFiltros('fTip')">
-                    <option value="Todos">Todos los Platos</option>
-                    <option value="Entrante">Entrante</option><option value="Plato Principal">Plato Principal</option>
-                </select>
+                <select id="fIng" onchange="sincronizarFiltros('fIng')"><option value="Todos">Todos los Ingredientes</option><option value="Pollo">Pollo</option><option value="Carne">Carne</option></select>
+                <select id="fEla" onchange="sincronizarFiltros('fEla')"><option value="Todas">Todas las Elaboraciones</option><option value="Horno">Horno</option></select>
+                <select id="fTip" onchange="sincronizarFiltros('fTip')"><option value="Todos">Todos los Platos</option><option value="Entrante">Entrante</option></select>
             </div>
         </div>
-
         <div class="galeria" id="listaRecetas"></div>
     </main>
 </div>
@@ -186,8 +144,8 @@
     </div>
     <div id="chat-messages"></div>
     <div style="display: flex; border-top: 1px solid #eee; padding: 15px; background: #f9f9f9;">
-        <input type="text" id="chat-input" placeholder="Pregunta algo...">
-        <button onclick="preguntarChef()" style="padding: 12px; margin-left: 10px; background: #27ae60; color: white; border: none; border-radius: 8px;">Enviar</button>
+        <input type="text" id="chat-input" placeholder="Pregunta algo..." style="flex: 1; border: 1px solid #ddd; padding: 10px; border-radius: 8px;">
+        <button onclick="preguntarChef()" style="padding: 10px 20px; margin-left: 10px; background: #27ae60; color: white; border: none; border-radius: 8px;">Enviar</button>
     </div>
 </div>
 
@@ -200,7 +158,6 @@
         messagingSenderId: "1070923399824",
         appId: "1:1070923399824:web:6763c4841887cc000c4e15"
     };
-
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
     let recetasLocales = [];
@@ -216,91 +173,205 @@
         const fe = document.getElementById('fEla').value;
         const ft = document.getElementById('fTip').value;
         caja.innerHTML = '';
-        
         recetasLocales.forEach(r => {
-            const coincideID = idEspecifico ? String(r.id) === String(idEspecifico) : false;
-            const pasanFiltros = (fi === 'Todos' || r.ingrediente === fi) && 
-                                 (fe === 'Todas' || r.elaboracion === fe) && 
-                                 (ft === 'Todos' || r.tipo === ft);
-
-            if (idEspecifico) {
-                if (coincideID) construirTarjeta(r, caja);
-            } else if (pasanFiltros) {
-                construirTarjeta(r, caja);
+            if (idEspecifico ? String(r.id) === String(idEspecifico) : (fi === 'Todos' || r.ingrediente === fi) && (fe === 'Todas' || r.elaboracion === fe) && (ft === 'Todos' || r.tipo === ft)) {
+                const esFav = r.esFavorito === true; 
+                caja.innerHTML += `
+                    <div class="tarjeta" id="receta-${r.id}">
+                        <button class="fav-btn" onclick="toggleFav('${r.id}')">${esFav ? '❤️' : '🤍'}</button>
+                        <img src="${r.imagen || 'https://via.placeholder.com/300'}">
+                        <div class="info">
+                            <h3 style="margin:0;">${r.nombre}</h3>
+                            <span class="tag tag-ing">${r.ingrediente}</span>
+                            <span class="tag tag-ela">${r.elaboracion}</span>
+                            <span class="tag tag-tip">${r.tipo}</span>
+                            ${r.video ? `<br><a href="${r.video}" target="_blank" style="color:#2980b9; font-size:0.85em; text-decoration:none; font-weight:bold; display:block; margin-top:10px;">🎬 Ver Vídeo Original</a>` : ''}
+                            <button onclick="consultarReceta('${r.id}')" style="margin-top:12px; width:100%; background:#27ae60; font-size:0.85em; padding:10px; border-radius:6px; border:none; color:white; cursor:pointer; font-weight:bold;">Preguntar al Chef 👨‍🍳</button>
+                        </div>
+                        <div class="acciones"><button class="edit" onclick="prepararEdicion('${r.id}')">Editar</button><button class="del" onclick="borrarReceta('${r.id}')">Borrar</button></div>
+                    </div>`;
             }
         });
         actualizarSidebarFavs();
     }
 
-    function construirTarjeta(r, contenedor) {
-        const esFav = r.esFavorito === true; 
-        contenedor.innerHTML += `
-            <div class="tarjeta" id="receta-${r.id}">
-                <button class="fav-btn" onclick="toggleFav('${r.id}')">${esFav ? '❤️' : '🤍'}</button>
-                <img src="${r.imagen || 'https://via.placeholder.com/300'}">
-                <div class="info">
-                    <h3 style="margin:0;">${r.nombre}</h3>
-                    <span class="tag tag-ing">${r.ingrediente}</span>
-                    <span class="tag tag-ela">${r.elaboracion}</span>
-                    <span class="tag tag-tip">${r.tipo}</span>
-                    ${r.video ? `<br><a href="${r.video}" target="_blank" style="color:#2980b9; font-size:0.85em; text-decoration:none; font-weight:bold; display:block; margin-top:10px;">🎬 Ver Vídeo</a>` : ''}
-                </div>
-                <div class="acciones">
-                    <button class="edit" onclick="prepararEdicion('${r.id}')">Editar</button>
-                    <button class="del" onclick="borrarReceta('${r.id}')">Borrar</button>
-                </div>
-            </div>`;
-    }
-
     async function toggleFav(id) {
         const receta = recetasLocales.find(r => r.id === id);
-        if (!receta) return;
-        await db.collection("recetas").doc(id).update({ esFavorito: !receta.esFavorito });
+        if (receta) await db.collection("recetas").doc(id).update({ esFavorito: !receta.esFavorito });
     }
 
     function actualizarSidebarFavs() {
         const div = document.getElementById('lista-favs');
         div.innerHTML = '';
         const recFavs = recetasLocales.filter(r => r.esFavorito === true);
-        if (recFavs.length === 0) {
-            div.innerHTML = '<p style="color:#999; font-size:0.8em;">No hay favoritos.</p>';
-            return;
+        if (recFavs.length === 0) { div.innerHTML = '<p style="color:#999; font-size:0.8em;">No hay favoritos.</p>'; return; }
+        recFavs.forEach(r => div.innerHTML += `<div class="item-fav" onclick="verRecetaFav('${r.id}')">📌 ${r.nombre}</div>`);
+    }
+
+    function toggleChat() {
+        const chat = document.getElementById('chat-container');
+        const btnOpen = document.getElementById('chat-btn-open');
+        const messages = document.getElementById('chat-messages');
+        if (chat.style.display === 'flex') {
+            chat.style.display = 'none';
+            btnOpen.style.display = 'flex';
+            messages.innerHTML = ''; 
+        } else {
+            chat.style.display = 'flex';
+            btnOpen.style.display = 'none';
         }
-        recFavs.forEach(r => {
-            div.innerHTML += `<div class="item-fav" onclick="verRecetaFav('${r.id}')">📌 ${r.nombre}</div>`;
-        });
     }
 
-    function verRecetaFav(id) {
-        renderizar(id);
-        const sidebar = document.querySelector('.sidebar');
-        if (sidebar.classList.contains('active')) toggleSidebar();
-        setTimeout(() => {
-            const el = document.getElementById(`receta-${id}`);
-            if(el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }, 300);
-    }
+    function consultarReceta(id) {
+    const r = recetasLocales.find(rec => rec.id === id);
+    if (!r) return;
+    
+    const chat = document.getElementById('chat-container');
+    const btnOpen = document.getElementById('chat-btn-open');
+    const box = document.getElementById('chat-messages');
+    
+    box.innerHTML = ''; 
+    chat.style.display = 'flex';
+    btnOpen.style.display = 'none';
+    
+    box.innerHTML += `<div class="msg user-msg">Chef, enséñame a cocinar paso a paso: **${r.nombre}**</div>`;
 
+    setTimeout(() => {
+        // Lógica técnica detallada según el método
+        let guiaTecnica = "";
+        let tiempo = "";
+
+        if(r.elaboracion === "Horno") {
+            tiempo = "45 a 60 minutos";
+            guiaTecnica = `Debemos precalentar a 200°C. Es vital que el <strong>${r.ingrediente}</strong> entre seco para que la reacción de Maillard haga su magia y dore la superficie. Colócalo en la zona media y, si ves que se tuesta demasiado, cubre con papel de aluminio a mitad del proceso.`;
+        } else if(r.elaboracion === "Airfryer") {
+            tiempo = "15 a 22 minutos";
+            guiaTecnica = `El secreto aquí es no saturar el cestillo. Pulveriza un poco de aceite sobre el <strong>${r.ingrediente}</strong> para que el aire caliente circule uniformemente. A mitad de tiempo, agita con energía para que el dorado sea homogéneo por todas las caras.`;
+        } else if(r.elaboracion === "Plancha") {
+            tiempo = "10 a 15 minutos";
+            guiaTecnica = `La plancha debe estar humeante. Sella el <strong>${r.ingrediente}</strong> a fuego fuerte para atrapar los jugos y luego baja un poco el fuego para que el calor llegue al centro sin quemar el exterior. No le des vueltas constantes; deja que se forme costra.`;
+        } else {
+            tiempo = "30 minutos";
+            guiaTecnica = `Cocinaremos a fuego medio-bajo. Deja que el <strong>${r.ingrediente}</strong> se impregne de los sabores del sofrito o la salsa. Es un proceso de mimo donde el tiempo y el chup-chup son tus mejores aliados.`;
+        }
+
+        const respuestaChef = `
+            <strong>👨‍🍳 BIENVENIDO A LA COCINA: ${r.nombre}</strong><br><br>
+            
+            Vamos a tratar este <strong>${r.ingrediente}</strong> como se merece. Para este plato de tipo <em>${r.tipo}</em>, seguiremos un proceso meticuloso:<br><br>
+
+            🔪 <strong>1. Preparación Previa (Mise en Place):</strong><br>
+            Antes de encender el fuego, limpia y corta el ingrediente principal en piezas de tamaño similar; esto garantiza que todo se cocine al mismo tiempo. Salpimenta ahora, para que los sabores penetren en la fibra mientras preparas el equipo.<br><br>
+
+            🔥 <strong>2. El Proceso de Elaboración (${r.elaboracion}):</strong><br>
+            ${guiaTecnica} Durante estos <strong>${tiempo}</strong>, mantente atento a los cambios de color y aroma. La cocina es intuición, pero la técnica de <em>${r.elaboracion}</em> requiere precisión.<br><br>
+
+            ✨ <strong>3. Reposo y Acabado:</strong><br>
+            Una vez fuera del fuego, no cortes ni sirvas inmediatamente. Deja que repose 2 o 3 minutos; esto hace que los jugos internos se redistribuyan. Termina con un chorrito de aceite de oliva virgen extra en crudo o unas escamas de sal para potenciar la textura.<br><br>
+
+            🍎 <strong>Valores Nutricionales Aproximados:</strong><br>
+            • Calorías: 350-550 kcal (dependiendo del aceite usado).<br>
+            • Perfil: Alto en proteínas por el ${r.ingrediente} y bajo en azúcares.<br><br>
+
+            🚀 <strong>Aprende visualmente:</strong><br>
+            • <a href="https://www.youtube.com/results?search_query=tecnica+profesional+${r.nombre}" target="_blank">Masterclass en YouTube</a><br>
+            • <a href="https://www.tiktok.com/search?q=receta+${r.nombre}+paso+a+paso" target="_blank">Trucos rápidos en TikTok</a>
+        `;
+        
+        box.innerHTML += `<div class="msg bot-msg">${respuestaChef}</div>`;
+        box.scrollTop = box.scrollHeight;
+    }, 800);
+}
+
+    async function preguntarChef() {
+    const input = document.getElementById('chat-input');
+    const consulta = input.value.trim();
+    if(!consulta) return;
+    
+    const box = document.getElementById('chat-messages');
+    box.innerHTML += `<div class="msg user-msg">Chef, búscame la receta completa de: **${consulta}**</div>`;
+    input.value = '';
+    box.scrollTop = box.scrollHeight;
+
+    // Efecto de búsqueda profunda
+    const typingId = "typing-" + Date.now();
+    box.innerHTML += `<div class="msg bot-msg" id="${typingId}">👨‍🍳 Buscando ingredientes, tiempos y técnicas para "${consulta}"...</div>`;
+    
+    setTimeout(() => {
+        const typingElem = document.getElementById(typingId);
+        if(typingElem) typingElem.remove();
+
+        // Estructura de Receta Completa Profesional
+        const respuestaChef = `
+            <h2 style="color:#d35400; margin-top:0;">📖 Receta Maestra: ${consulta}</h2>
+            
+            <div style="background:#fef9e7; padding:10px; border-radius:8px; margin-bottom:15px; font-size:0.9em;">
+                ⏱️ <strong>Preparación:</strong> 15 min | 🍳 <strong>Cocción:</strong> 25-30 min | 👥 <strong>Raciones:</strong> 2 personas
+            </div>
+
+            <h3>🛒 Ingredientes y Cantidades</h3>
+            <ul style="padding-left:20px;">
+                <li><strong>Proteína/Base:</strong> 400g de ${consulta}</li>
+                <li><strong>Vegetales:</strong> 1 cebolla pequeña, 2 dientes de ajo, 1 pimiento.</li>
+                <li><strong>Líquidos:</strong> 50ml de vino blanco o caldo, 2 cucharadas de AOVE.</li>
+                <li><strong>Especias:</strong> Sal fina, pimienta negra recién molida, una pizca de pimentón o hierbas provenzales.</li>
+            </ul>
+
+            <h3>👨‍🍳 Elaboración Detallada</h3>
+            <p><strong>Paso 1 (Mise en place):</strong> Corta todos los vegetales en <em>brunoise</em> (dados muy pequeños) y limpia bien el ingrediente principal. Seca la proteína con papel de cocina para asegurar un buen sellado.</p>
+            
+            <p><strong>Paso 2 (El sofrito):</strong> En una sartén amplia con el AOVE caliente, añade la cebolla y el pimiento. Cocina a fuego medio hasta que la cebolla esté traslúcida (unos 8 min). Añade el ajo al final para que no se queme.</p>
+            
+            <p><strong>Paso 3 (Cocción principal):</strong> Sube el fuego y añade el <strong>${consulta}</strong>. Sella por ambos lados hasta que esté dorado. Desglasa con el vino blanco rascando el fondo para recuperar los jugos caramelizados.</p>
+            
+            <p><strong>Paso 4 (Punto final):</strong> Baja el fuego y deja que reduzca el líquido. Si es carne, busca el punto deseado; si es verdura, que quede <em>al dente</em>.</p>
+
+            <h3>🍽️ Emplatado y Presentación</h3>
+            <p>Sirve en un plato llano grande. Coloca la guarnición de base y la pieza principal encima. Decora con un hilo de aceite de oliva virgen extra y una rama de perejil fresco o cebollino picado para dar altura y color.</p>
+
+            <hr style="border:0; border-top:1px solid #ddd; margin:15px 0;">
+
+            🍎 <strong>Análisis Nutricional (Estimado):</strong><br>
+            • <strong>Kcal:</strong> 420 | <strong>Proteína:</strong> 30g | <strong>Grasas:</strong> 15g | <strong>HC:</strong> 10g<br><br>
+
+            💡 <strong>Consejo de Mejora:</strong> Si quieres un sabor más profundo, añade una nuez de mantequilla fría justo al terminar la cocción y remueve para emulsionar la salsa.
+
+            <br><br>
+            🚀 <strong>Guías Multimedia:</strong><br>
+            <a href="https://www.youtube.com/results?search_query=receta+completa+${consulta}" target="_blank">🎬 YouTube</a> | 
+            <a href="https://www.tiktok.com/search?q=receta+${consulta}" target="_blank">📱 TikTok</a> | 
+            <a href="https://www.instagram.com/explore/tags/${consulta.replace(/\s+/g, '')}recipe" target="_blank">📸 Instagram</a>
+        `;
+        
+        box.innerHTML += `<div class="msg bot-msg">${respuestaChef}</div>`;
+        box.scrollTop = box.scrollHeight;
+    }, 2000);
+}
+
+    function toggleSidebar() { const s = document.querySelector('.sidebar'); s.classList.toggle('active'); }
+    function sincronizarFiltros(id) { 
+        const val = document.getElementById(id).value; 
+        const tipo = id.substring(1); 
+        document.getElementById('f'+tipo).value = val; 
+        document.getElementById('s'+tipo).value = val; 
+        renderizar(); 
+    }
+    function verRecetaFav(id) { renderizar(id); toggleSidebar(); }
     function prepararEdicion(id) {
         const r = recetasLocales.find(rec => rec.id === id);
         document.getElementById('idDoc').value = r.id;
         document.getElementById('nombre').value = r.nombre;
         document.getElementById('video').value = r.video || '';
-        document.getElementById('ingrediente').value = r.ingrediente;
-        document.getElementById('elaboracion').value = r.elaboracion;
-        document.getElementById('tipo').value = r.tipo;
         document.getElementById('btnCan').style.display = "block";
-        document.getElementById('tituloForm').innerText = "Editando Receta";
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
-
+    
     async function enviarDatos() {
         const id = document.getElementById('idDoc').value;
         const nombre = document.getElementById('nombre').value;
         const archivo = document.getElementById('foto').files[0];
         if(!nombre) return alert("Nombre obligatorio");
         let imgFinal = recetasLocales.find(r => r.id === id)?.imagen || "https://via.placeholder.com/300";
-        
         if(archivo) {
             const reader = new FileReader();
             imgFinal = await new Promise(res => {
@@ -318,56 +389,17 @@
         id ? await db.collection("recetas").doc(id).update(datos) : await db.collection("recetas").add(datos);
         limpiarFormulario();
     }
-
-    function limpiarFormulario() {
-        document.getElementById('idDoc').value = '';
-        document.getElementById('nombre').value = '';
+    
+    function limpiarFormulario() { 
+        document.getElementById('idDoc').value = ''; 
+        document.getElementById('nombre').value = ''; 
         document.getElementById('video').value = '';
-        document.getElementById('btnCan').style.display = "none";
-        document.getElementById('tituloForm').innerText = "Nueva Receta";
+        document.getElementById('btnCan').style.display = "none"; 
     }
-
     function borrarReceta(id) { if(confirm("¿Borrar?")) db.collection("recetas").doc(id).delete(); }
-
-    function toggleSidebar() {
-        const sidebar = document.querySelector('.sidebar');
-        const btn = document.getElementById('menu-toggle');
-        sidebar.classList.toggle('active');
-        btn.innerHTML = sidebar.classList.contains('active') ? '✕' : '☰';
-    }
-
-    function toggleChat() {
-        const chat = document.getElementById('chat-container');
-        const btnOpen = document.getElementById('chat-btn-open');
-        chat.style.display = (chat.style.display === 'flex') ? 'none' : 'flex';
-        btnOpen.style.display = (chat.style.display === 'flex') ? 'none' : 'flex';
-    }
-
-    function sincronizarFiltros(idOrigen) {
-        const val = document.getElementById(idOrigen).value;
-        const tipo = idOrigen.substring(1); 
-        document.getElementById('f' + tipo).value = val;
-        document.getElementById('s' + tipo).value = val;
-        renderizar();
-    }
-
-    function preguntarChef() {
-        const input = document.getElementById('chat-input');
-        const msg = input.value;
-        if(!msg) return;
-        const box = document.getElementById('chat-messages');
-        box.innerHTML += `<div class="msg user-msg">${msg}</div>`;
-        input.value = '';
-        setTimeout(() => {
-            box.innerHTML += `<div class="msg bot-msg">¡Esa receta suena genial! ¿Quieres que te ayude con los tiempos de cocción?</div>`;
-            box.scrollTop = box.scrollHeight;
-        }, 1000);
-    }
-
     const bloc = document.getElementById('bloc-notas');
     bloc.value = localStorage.getItem('user_notas') || '';
     bloc.addEventListener('input', () => localStorage.setItem('user_notas', bloc.value));
-    function limpiarNotas() { bloc.value = ''; localStorage.removeItem('user_notas'); }
 </script>
 </body>
 </html>
