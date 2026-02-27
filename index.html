@@ -13,108 +13,47 @@
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-firestore-compat.js"></script>
     
     <style>
-        /* --- ESTILOS GENERALES Y ESTRUCTURA --- */
+        /* --- ESTILOS GENERALES --- */
         body { font-family: 'Segoe UI', sans-serif; background-color: #f0f2f5; margin: 0; padding: 20px; color: #333; overflow-x: hidden; }
-        
-        .layout { 
-            display: block; 
-            max-width: 1400px; 
-            margin: auto; 
-            padding-top: 60px; 
-        }
+        .layout { display: block; max-width: 1400px; margin: auto; padding-top: 60px; }
 
-        /* Sidebar: Corregido para que no se vea nada en móvil cuando está cerrado */
+        /* Sidebar mejorada */
         .sidebar { 
-            width: 300px; 
-            position: fixed; 
-            top: 0; 
-            left: 0;
-            transform: translateX(-320px); /* Usamos transform para ocultarlo totalmente */
-            height: 100%; 
-            z-index: 1000; 
-            transition: transform 0.3s ease; 
-            overflow-y: auto;
-            background: #f0f2f5;
-            padding: 80px 10px 20px 10px;
+            width: 300px; position: fixed; top: 0; left: 0;
+            transform: translateX(-320px); height: 100%; z-index: 1000; 
+            transition: transform 0.3s ease; overflow-y: auto;
+            background: #f0f2f5; padding: 80px 10px 20px 10px;
             box-shadow: 5px 0 15px rgba(0,0,0,0.1);
         }
-
-        .sidebar.active {
-            transform: translateX(0); /* Se desliza hacia adentro */
-        }
-
-        .contenido { 
-            width: 100%; 
-            transition: 0.3s;
-        }
+        .sidebar.active { transform: translateX(0); }
 
         .panel-lateral {
-            background: white;
-            border-radius: 12px;
-            padding: 20px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-            display: flex;
-            flex-direction: column;
-            gap: 25px;
+            background: white; border-radius: 12px; padding: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05); display: flex;
+            flex-direction: column; gap: 25px;
         }
 
-        .seccion-lateral h3 { 
-            margin: 0 0 15px 0; 
-            font-size: 1.1em; 
-            color: #d35400; 
-            display: flex; 
-            align-items: center; 
-            gap: 8px;
-        }
-
-        .sidebar select { 
-            margin-bottom: 10px; 
-            background: #fdfdfd; 
-            border: 1px solid #eee;
-        }
-
-        /* Favoritos */
-        .lista-favs { font-size: 0.9em; }
-        .item-fav { 
-            padding: 8px; 
-            border-bottom: 1px solid #f9f9f9; 
-            cursor: pointer; 
-            color: #555;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-        .item-fav:hover { color: #d35400; }
+        .seccion-lateral h3 { margin: 0 0 15px 0; font-size: 1.1em; color: #d35400; display: flex; align-items: center; gap: 8px; }
+        .sidebar select { margin-bottom: 10px; background: #fdfdfd; border: 1px solid #eee; padding: 8px; border-radius: 5px; width: 100%; }
 
         /* Bloc de Notas */
-        #bloc-notas {
-            width: 100%;
-            height: 120px;
-            border: none;
-            background: #fff9e6;
-            padding: 10px;
-            border-radius: 8px;
-            font-family: inherit;
-            resize: none;
-            box-sizing: border-box;
-        }
+        #bloc-notas { width: 100%; height: 120px; border: none; background: #fff9e6; padding: 10px; border-radius: 8px; font-family: inherit; resize: none; box-sizing: border-box; }
 
-        /* --- CONTENIDO PRINCIPAL --- */
+        /* Formulario y Contenido */
         h1 { color: #d35400; text-align: center; margin-top: 0; }
         .formulario, .filtros-seccion { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 25px; }
-        
         .fila { display: flex; gap: 15px; flex-wrap: wrap; margin-bottom: 15px; }
         .fila > * { flex: 1; min-width: 200px; }
         input, select { border: 1px solid #ddd; border-radius: 6px; padding: 12px; width: 100%; box-sizing: border-box; }
         
         button { background-color: #27ae60; color: white; border: none; font-weight: bold; cursor: pointer; border-radius: 6px; padding: 12px; transition: 0.3s; }
         button:hover { background-color: #219150; }
-        
+
         .galeria { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px; }
         .tarjeta { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.08); display: flex; flex-direction: column; position: relative; }
         .tarjeta img { width: 100%; height: 180px; object-fit: cover; }
         
-        .fav-btn { position: absolute; top: 10px; right: 10px; background: white; border: none; border-radius: 50%; width: 35px; height: 35px; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.2); font-size: 18px; }
+        .fav-btn { position: absolute; top: 10px; right: 10px; background: white; border: none; border-radius: 50%; width: 35px; height: 35px; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.2); font-size: 18px; z-index: 10; }
 
         .info { padding: 15px; flex-grow: 1; }
         .tag { font-size: 0.7em; color: white; padding: 4px 10px; border-radius: 20px; margin-right: 5px; display: inline-block; margin-top: 5px; font-weight: bold; }
@@ -124,13 +63,11 @@
         .acciones button { flex: 1; border-radius: 0; padding: 10px; font-size: 0.8em; }
         .edit { background: #f39c12; } .del { background: #c0392b; }
 
-        /* --- CHAT (Restaurado a tu estilo original) --- */
+        /* Chat Estilo Original */
         #chat-container { position: fixed; bottom: 0; right: 0; width: 50vw; height: 100vh; background: white; box-shadow: -5px 0 30px rgba(0,0,0,0.3); display: none; flex-direction: column; z-index: 10000; border-left: 2px solid #d35400; }
         #chat-btn-open { position: fixed; bottom: 25px; right: 25px; background: #d35400; color: white; border: none; border-radius: 50%; width: 70px; height: 70px; cursor: pointer; font-size: 32px; box-shadow: 0 4px 20px rgba(0,0,0,0.4); z-index: 10001; display: flex; align-items: center; justify-content: center; }
         #chat-header { background-color: #d35400; color: white; padding: 20px; font-weight: bold; display: flex; justify-content: space-between; align-items: center; }
         #chat-messages { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 15px; }
-        
-        /* Texto del chat restaurado a grande */
         .msg { padding: 12px 18px; border-radius: 12px; max-width: 85%; font-size: 1.05em; line-height: 1.6; }
         .user-msg { background: #e1f5fe; align-self: flex-end; }
         .bot-msg { background: #f8f9fa; align-self: flex-start; border-left: 4px solid #d35400; }
@@ -143,7 +80,7 @@
 </head>
 <body>
 
-<button id="menu-toggle" onclick="toggleSidebar()" style="position: fixed; top: 20px; left: 20px; z-index: 1001; background: #d35400; color: white; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer; font-size: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.2);">
+<button id="menu-toggle" onclick="toggleSidebar()" style="position: fixed; top: 20px; left: 20px; z-index: 1001; background: #d35400; color: white; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer; font-size: 20px;">
     ☰
 </button>
 
@@ -249,183 +186,188 @@
     </div>
     <div id="chat-messages"></div>
     <div style="display: flex; border-top: 1px solid #eee; padding: 15px; background: #f9f9f9;">
-        <input type="text" id="chat-input" placeholder="Pregunta algo..." style="flex: 1; border: 1px solid #ddd; padding: 12px; border-radius: 8px;">
-        <button onclick="preguntarChef()" style="padding: 12px 25px; margin-left: 10px; background: #27ae60; color: white; border: none; border-radius: 8px;">Enviar</button>
+        <input type="text" id="chat-input" placeholder="Pregunta algo...">
+        <button onclick="preguntarChef()" style="padding: 12px; margin-left: 10px; background: #27ae60; color: white; border: none; border-radius: 8px;">Enviar</button>
     </div>
 </div>
 
 <script>
-    // --- FIREBASE CONFIG ---
     const firebaseConfig = {
-    apiKey: "AIzaSyA4kvu1bj--OtEgQ2Z6-ia34Gk249tPdQc",
-    authDomain: "el-recetario-de-mario-y-esther.firebaseapp.com",
-    projectId: "el-recetario-de-mario-y-esther",
-    storageBucket: "el-recetario-de-mario-y-esther.firebasestorage.app",
-    messagingSenderId: "1070923399824",
-    appId: "1:1070923399824:web:6763c4841887cc000c4e15"
-};
+        apiKey: "AIzaSyA4kvu1bj--OtEgQ2Z6-ia34Gk249tPdQc",
+        authDomain: "el-recetario-de-mario-y-esther.firebaseapp.com",
+        projectId: "el-recetario-de-mario-y-esther",
+        storageBucket: "el-recetario-de-mario-y-esther.firebasestorage.app",
+        messagingSenderId: "1070923399824",
+        appId: "1:1070923399824:web:6763c4841887cc000c4e15"
+    };
 
-firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
-let recetasLocales = [];
-let favoritos = JSON.parse(localStorage.getItem('recetas_favs')) || [];
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+    let recetasLocales = [];
 
-// --- CARGA INICIAL ---
-db.collection("recetas").orderBy("fecha", "desc").onSnapshot((snapshot) => {
-    recetasLocales = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-    renderizar();
-});
-
-function renderizar(idEspecifico = null) {
-    const caja = document.getElementById('listaRecetas');
-    const fi = document.getElementById('fIng').value;
-    const fe = document.getElementById('fEla').value;
-    const ft = document.getElementById('fTip').value;
-    
-    caja.innerHTML = '';
-    
-    recetasLocales.forEach(r => {
-        const coincideID = idEspecifico ? String(r.id) === String(idEspecifico) : false;
-        const pasanFiltros = (fi === 'Todos' || r.ingrediente === fi) && 
-                             (fe === 'Todas' || r.elaboracion === fe) && 
-                             (ft === 'Todos' || r.tipo === ft);
-
-        if (idEspecifico) {
-            if (coincideID) construirTarjeta(r, caja);
-        } else {
-            if (pasanFiltros) construirTarjeta(r, caja);
-        }
+    db.collection("recetas").orderBy("fecha", "desc").onSnapshot((snapshot) => {
+        recetasLocales = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        renderizar();
     });
 
-    if (idEspecifico) {
-        document.querySelectorAll('select').forEach(s => s.selectedIndex = 0);
+    function renderizar(idEspecifico = null) {
+        const caja = document.getElementById('listaRecetas');
+        const fi = document.getElementById('fIng').value;
+        const fe = document.getElementById('fEla').value;
+        const ft = document.getElementById('fTip').value;
+        caja.innerHTML = '';
+        
+        recetasLocales.forEach(r => {
+            const coincideID = idEspecifico ? String(r.id) === String(idEspecifico) : false;
+            const pasanFiltros = (fi === 'Todos' || r.ingrediente === fi) && 
+                                 (fe === 'Todas' || r.elaboracion === fe) && 
+                                 (ft === 'Todos' || r.tipo === ft);
+
+            if (idEspecifico) {
+                if (coincideID) construirTarjeta(r, caja);
+            } else if (pasanFiltros) {
+                construirTarjeta(r, caja);
+            }
+        });
+        actualizarSidebarFavs();
     }
-    actualizarSidebarFavs();
-}
 
-function construirTarjeta(r, contenedor) {
-    const esFav = favoritos.includes(r.id);
-    contenedor.innerHTML += `
-        <div class="tarjeta" id="receta-${r.id}">
-            <button class="fav-btn" onclick="toggleFav('${r.id}')">${esFav ? '❤️' : '🤍'}</button>
-            <img src="${r.imagen || 'https://via.placeholder.com/300'}">
-            <div class="info">
-                <h3 style="margin:0;">${r.nombre}</h3>
-                <span class="tag tag-ing">${r.ingrediente}</span>
-                <span class="tag tag-ela">${r.elaboracion}</span>
-                <span class="tag tag-tip">${r.tipo}</span>
-                ${r.video ? `<br><a href="${r.video}" target="_blank" style="color:#2980b9; font-size:0.85em; text-decoration:none; font-weight:bold; display:block; margin-top:10px;">🎬 Ver Vídeo Original</a>` : ''}
-            </div>
-            <div class="acciones">
-                <button class="edit" onclick="prepararEdicion('${r.id}')">Editar</button>
-                <button class="del" onclick="borrarReceta('${r.id}')">Borrar</button>
-            </div>
-        </div>`;
-}
-
-function toggleFav(id) {
-    if(favoritos.includes(id)) favoritos = favoritos.filter(f => f !== id);
-    else favoritos.push(id);
-    localStorage.setItem('recetas_favs', JSON.stringify(favoritos));
-    renderizar();
-}
-
-function actualizarSidebarFavs() {
-    const div = document.getElementById('lista-favs');
-    div.innerHTML = '';
-    const recFavs = recetasLocales.filter(r => favoritos.includes(r.id));
-    if (recFavs.length === 0) {
-        div.innerHTML = '<p style="color:#999; font-size:0.8em;">No hay favoritos.</p>';
-        return;
-    }
-    recFavs.forEach(r => {
-        div.innerHTML += `
-            <div class="item-fav" onclick="verRecetaFav('${r.id}')" style="cursor:pointer; padding: 8px 5px; border-bottom: 1px solid #f5f5f5;">
-                📌 ${r.nombre}
+    function construirTarjeta(r, contenedor) {
+        const esFav = r.esFavorito === true; 
+        contenedor.innerHTML += `
+            <div class="tarjeta" id="receta-${r.id}">
+                <button class="fav-btn" onclick="toggleFav('${r.id}')">${esFav ? '❤️' : '🤍'}</button>
+                <img src="${r.imagen || 'https://via.placeholder.com/300'}">
+                <div class="info">
+                    <h3 style="margin:0;">${r.nombre}</h3>
+                    <span class="tag tag-ing">${r.ingrediente}</span>
+                    <span class="tag tag-ela">${r.elaboracion}</span>
+                    <span class="tag tag-tip">${r.tipo}</span>
+                    ${r.video ? `<br><a href="${r.video}" target="_blank" style="color:#2980b9; font-size:0.85em; text-decoration:none; font-weight:bold; display:block; margin-top:10px;">🎬 Ver Vídeo</a>` : ''}
+                </div>
+                <div class="acciones">
+                    <button class="edit" onclick="prepararEdicion('${r.id}')">Editar</button>
+                    <button class="del" onclick="borrarReceta('${r.id}')">Borrar</button>
+                </div>
             </div>`;
-    });
-}
+    }
 
-// CORRECCIÓN: Filtrar receta favorita y cerrar el menú
-function verRecetaFav(id) {
-    const receta = recetasLocales.find(r => String(r.id) === String(id));
-    if (receta) {
+    async function toggleFav(id) {
+        const receta = recetasLocales.find(r => r.id === id);
+        if (!receta) return;
+        await db.collection("recetas").doc(id).update({ esFavorito: !receta.esFavorito });
+    }
+
+    function actualizarSidebarFavs() {
+        const div = document.getElementById('lista-favs');
+        div.innerHTML = '';
+        const recFavs = recetasLocales.filter(r => r.esFavorito === true);
+        if (recFavs.length === 0) {
+            div.innerHTML = '<p style="color:#999; font-size:0.8em;">No hay favoritos.</p>';
+            return;
+        }
+        recFavs.forEach(r => {
+            div.innerHTML += `<div class="item-fav" onclick="verRecetaFav('${r.id}')">📌 ${r.nombre}</div>`;
+        });
+    }
+
+    function verRecetaFav(id) {
         renderizar(id);
         const sidebar = document.querySelector('.sidebar');
-        if (sidebar.classList.contains('active')) toggleSidebar(); // Cerramos el menú tras elegir
-        
+        if (sidebar.classList.contains('active')) toggleSidebar();
         setTimeout(() => {
             const el = document.getElementById(`receta-${id}`);
             if(el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }, 300);
     }
-}
 
-function toggleSidebar() {
-    const sidebar = document.querySelector('.sidebar');
-    const btn = document.getElementById('menu-toggle');
-    sidebar.classList.toggle('active');
-    btn.innerHTML = sidebar.classList.contains('active') ? '✕' : '☰';
-}
-
-function toggleChat() {
-    const chat = document.getElementById('chat-container');
-    const btnOpen = document.getElementById('chat-btn-open');
-    if (chat.style.display === 'flex') {
-        chat.style.display = 'none';
-        btnOpen.style.display = 'flex';
-    } else {
-        chat.style.display = 'flex';
-        btnOpen.style.display = 'none'; // Se oculta para que no tape el botón enviar
+    function prepararEdicion(id) {
+        const r = recetasLocales.find(rec => rec.id === id);
+        document.getElementById('idDoc').value = r.id;
+        document.getElementById('nombre').value = r.nombre;
+        document.getElementById('video').value = r.video || '';
+        document.getElementById('ingrediente').value = r.ingrediente;
+        document.getElementById('elaboracion').value = r.elaboracion;
+        document.getElementById('tipo').value = r.tipo;
+        document.getElementById('btnCan').style.display = "block";
+        document.getElementById('tituloForm').innerText = "Editando Receta";
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     }
-}
 
-// Resto de funciones (enviarDatos, borrar, etc.)
-async function enviarDatos() {
-    const id = document.getElementById('idDoc').value;
-    const nombre = document.getElementById('nombre').value;
-    const archivo = document.getElementById('foto').files[0];
-    if(!nombre) return alert("Nombre obligatorio");
-    let imgFinal = "https://via.placeholder.com/300";
-    if(archivo) {
-        const reader = new FileReader();
-        imgFinal = await new Promise(res => {
-            reader.onload = () => res(reader.result);
-            reader.readAsDataURL(archivo);
-        });
+    async function enviarDatos() {
+        const id = document.getElementById('idDoc').value;
+        const nombre = document.getElementById('nombre').value;
+        const archivo = document.getElementById('foto').files[0];
+        if(!nombre) return alert("Nombre obligatorio");
+        let imgFinal = recetasLocales.find(r => r.id === id)?.imagen || "https://via.placeholder.com/300";
+        
+        if(archivo) {
+            const reader = new FileReader();
+            imgFinal = await new Promise(res => {
+                reader.onload = () => res(reader.result);
+                reader.readAsDataURL(archivo);
+            });
+        }
+        const datos = {
+            nombre, video: document.getElementById('video').value,
+            ingrediente: document.getElementById('ingrediente').value,
+            elaboracion: document.getElementById('elaboracion').value,
+            tipo: document.getElementById('tipo').value,
+            imagen: imgFinal, fecha: new Date()
+        };
+        id ? await db.collection("recetas").doc(id).update(datos) : await db.collection("recetas").add(datos);
+        limpiarFormulario();
     }
-    const datos = {
-        nombre, video: document.getElementById('video').value,
-        ingrediente: document.getElementById('ingrediente').value,
-        elaboracion: document.getElementById('elaboracion').value,
-        tipo: document.getElementById('tipo').value,
-        imagen: imgFinal, fecha: new Date()
-    };
-    id ? await db.collection("recetas").doc(id).update(datos) : await db.collection("recetas").add(datos);
-    limpiarFormulario();
-}
 
-function limpiarFormulario() {
-    document.getElementById('idDoc').value = '';
-    document.getElementById('nombre').value = '';
-    document.getElementById('btnCan').style.display = "none";
-    document.getElementById('tituloForm').innerText = "Nueva Receta";
-}
+    function limpiarFormulario() {
+        document.getElementById('idDoc').value = '';
+        document.getElementById('nombre').value = '';
+        document.getElementById('video').value = '';
+        document.getElementById('btnCan').style.display = "none";
+        document.getElementById('tituloForm').innerText = "Nueva Receta";
+    }
 
-function borrarReceta(id) { if(confirm("¿Borrar?")) db.collection("recetas").doc(id).delete(); }
+    function borrarReceta(id) { if(confirm("¿Borrar?")) db.collection("recetas").doc(id).delete(); }
 
-function sincronizarFiltros(idOrigen) {
-    const val = document.getElementById(idOrigen).value;
-    const tipo = idOrigen.substring(1); 
-    document.getElementById('f' + tipo).value = val;
-    document.getElementById('s' + tipo).value = val;
-    renderizar();
-}
+    function toggleSidebar() {
+        const sidebar = document.querySelector('.sidebar');
+        const btn = document.getElementById('menu-toggle');
+        sidebar.classList.toggle('active');
+        btn.innerHTML = sidebar.classList.contains('active') ? '✕' : '☰';
+    }
 
-const bloc = document.getElementById('bloc-notas');
-bloc.value = localStorage.getItem('user_notas') || '';
-bloc.addEventListener('input', () => localStorage.setItem('user_notas', bloc.value));
-function limpiarNotas() { bloc.value = ''; localStorage.removeItem('user_notas'); }
+    function toggleChat() {
+        const chat = document.getElementById('chat-container');
+        const btnOpen = document.getElementById('chat-btn-open');
+        chat.style.display = (chat.style.display === 'flex') ? 'none' : 'flex';
+        btnOpen.style.display = (chat.style.display === 'flex') ? 'none' : 'flex';
+    }
+
+    function sincronizarFiltros(idOrigen) {
+        const val = document.getElementById(idOrigen).value;
+        const tipo = idOrigen.substring(1); 
+        document.getElementById('f' + tipo).value = val;
+        document.getElementById('s' + tipo).value = val;
+        renderizar();
+    }
+
+    function preguntarChef() {
+        const input = document.getElementById('chat-input');
+        const msg = input.value;
+        if(!msg) return;
+        const box = document.getElementById('chat-messages');
+        box.innerHTML += `<div class="msg user-msg">${msg}</div>`;
+        input.value = '';
+        setTimeout(() => {
+            box.innerHTML += `<div class="msg bot-msg">¡Esa receta suena genial! ¿Quieres que te ayude con los tiempos de cocción?</div>`;
+            box.scrollTop = box.scrollHeight;
+        }, 1000);
+    }
+
+    const bloc = document.getElementById('bloc-notas');
+    bloc.value = localStorage.getItem('user_notas') || '';
+    bloc.addEventListener('input', () => localStorage.setItem('user_notas', bloc.value));
+    function limpiarNotas() { bloc.value = ''; localStorage.removeItem('user_notas'); }
 </script>
 </body>
 </html>
