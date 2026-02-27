@@ -77,18 +77,23 @@
                 <h3>🔍 Filtros</h3>
                 <select id="sIng" onchange="sincronizarFiltros('sIng')">
                     <option value="Todos">Ingredientes</option>
-                    <option value="Pollo">Pollo</option><option value="Pulpo">Pulpo</option>
-                    <option value="Pescado">Pescado</option><option value="Verduras">Verduras</option>
-                    <option value="Legumbres">Legumbres</option><option value="Carne">Carne</option>
+                    <option value="Pollo">Pollo</option>
+                    <option value="Pulpo">Pulpo</option>
+                    <option value="Pescado">Pescado</option>
+                    <option value="Verduras">Verduras</option>
+                    <option value="Legumbres">Legumbres</option>
+                    <option value="Carne">Carne</option>
                 </select>
                 <select id="sEla" onchange="sincronizarFiltros('sEla')">
                     <option value="Todas">Elaboración</option>
-                    <option value="Horno">Horno</option><option value="Airfryer">Airfryer</option>
+                    <option value="Horno">Horno</option>
+                    <option value="Airfryer">Airfryer</option>
                     <option value="Plancha">Plancha</option>
                 </select>
                 <select id="sTip" onchange="sincronizarFiltros('sTip')">
                     <option value="Todos">Tipo de Plato</option>
-                    <option value="Entrante">Entrante</option><option value="Plato Principal">Plato Principal</option>
+                    <option value="Entrante">Entrante</option>
+                    <option value="Plato Principal">Plato Principal</option>
                     <option value="Postre">Postre</option>
                 </select>
             </div>
@@ -111,25 +116,86 @@
             <h3 id="tituloForm">Nueva Receta</h3>
             <input type="hidden" id="idDoc">
             <div class="fila"><input type="text" id="nombre" placeholder="Nombre de la receta"><input type="text" id="video" placeholder="Link del vídeo"></div>
+            
             <div class="fila">
                 <input type="file" id="foto" accept="image/*">
                 <select id="ingrediente">
-                    <option value="Pollo">Pollo</option><option value="Pulpo">Pulpo</option><option value="Pescado">Pescado</option>
-                    <option value="Verduras">Verduras</option><option value="Legumbres">Legumbres</option><option value="Carne">Carne</option>
+                    <option value="Pollo">Pollo</option>
+                    <option value="Pulpo">Pulpo</option>
+                    <option value="Pescado">Pescado</option>
+                    <option value="Verduras">Verduras</option>
+                    <option value="Legumbres">Legumbres</option>
+                    <option value="Tostas">Tostas</option>
+                    <option value="Hojaldres">Hojaldres</option>
+                    <option value="Queso">Queso</option>
+                    <option value="Pasta">Pasta</option>
+                    <option value="Coulant">Coulant</option>
+                    <option value="Arroz">Arroz</option>
+                    <option value="Ensaladas">Ensaladas</option>
+                    <option value="Salchichas">Salchichas</option>
+                    <option value="Repostería">Repostería</option>
+                    <option value="Guisos">Guisos</option>
+                    <option value="Patatas">Patatas</option>
+				    <option value="Carne">Carne</option>
+			    	<option value="Sopas">Sopas</option>
                 </select>
             </div>
+            
             <div class="fila">
-                <select id="elaboracion"><option value="Horno">Horno</option><option value="Plancha">Plancha</option><option value="Airfryer">Airfryer</option><option value="Sartén">Sartén / Guiso</option></select>
-                <select id="tipo"><option value="Entrante">Entrante</option><option value="Plato Principal">Plato Principal</option><option value="Postre">Postre</option></select>
+                <select id="elaboracion"><option value="Horno">Horno</option>
+                    <option value="Plancha">Plancha</option>
+                    <option value="Airfryer">Airfryer</option>
+                    <option value="Sartén">Sartén / Guiso</option>
+                    <option value="Microondas">Microondas</option>
+                    <option value="Sin cocinado">Sin cocinado</option>
+                
+                <select id="tipo"><option value="Entrante">Entrante</option>
+                    <option value="Entrante">Entrante</option>
+                    <option value="Plato Principal">Plato Principal</option>
+                    <option value="Postre">Postre</option>
+                    <option value="Acompañamiento">Acompañamiento</option>
+                    <option value="Merienda">Merienda</option>
+                
             </div>
             <button onclick="enviarDatos()" id="btnAccion" style="width: 100%;">Guardar Receta</button>
             <button onclick="limpiarFormulario()" id="btnCan" style="display:none; width: 100%; background:#95a5a6; margin-top:10px;">Cancelar Edición</button>
         </div>
         <div class="filtros-seccion">
             <div class="fila">
-                <select id="fIng" onchange="sincronizarFiltros('fIng')"><option value="Todos">Todos los Ingredientes</option><option value="Pollo">Pollo</option><option value="Carne">Carne</option></select>
-                <select id="fEla" onchange="sincronizarFiltros('fEla')"><option value="Todas">Todas las Elaboraciones</option><option value="Horno">Horno</option></select>
-                <select id="fTip" onchange="sincronizarFiltros('fTip')"><option value="Todos">Todos los Platos</option><option value="Entrante">Entrante</option></select>
+                <select id="fIng" onchange="sincronizarFiltros('fIng')"><option value="Todos">Todos los Ingredientes</option>
+                    <option value="Pollo">Pollo</option>
+                    <option value="Pulpo">Pulpo</option>
+                    <option value="Pescado">Pescado</option>
+                    <option value="Verduras">Verduras</option>
+                    <option value="Legumbres">Legumbres</option>
+                    <option value="Tostas">Tostas</option>
+                    <option value="Hojaldres">Hojaldres</option>
+                    <option value="Queso">Queso</option>
+                    <option value="Pasta">Pasta</option>
+                    <option value="Coulant">Coulant</option>
+                    <option value="Arroz">Arroz</option>
+                    <option value="Ensaladas">Ensaladas</option>
+                    <option value="Salchichas">Salchichas</option>
+                    <option value="Repostería">Repostería</option>
+                    <option value="Guisos">Guisos</option>
+                    <option value="Patatas">Patatas</option>
+			    	<option value="Carne">Carne</option>
+			    	<option value="Sopas">Sopas</option>
+                
+                <select id="fEla" onchange="sincronizarFiltros('fEla')"><option value="Todas">Todas las Elaboraciones</option>
+                    <option value="Horno">Horno</option>
+                    <option value="Plancha">Plancha</option>
+                    <option value="Airfryer">Airfryer</option>
+                    <option value="Sartén">Sartén / Guiso</option>
+                    <option value="Microondas">Microondas</option>
+                    <option value="Sin cocinado">Sin cocinado</option>
+                    
+                <select id="fTip" onchange="sincronizarFiltros('fTip')"><option value="Todos">Todos los Platos</option>
+                    <option value="Entrante">Entrante</option>
+                    <option value="Plato Principal">Plato Principal</option>
+                    <option value="Postre">Postre</option>
+                    <option value="Acompañamiento">Acompañamiento</option>
+                    <option value="Merienda">Merienda</option>
             </div>
         </div>
         <div class="galeria" id="listaRecetas"></div>
@@ -430,3 +496,4 @@
 </script>
 </body>
 </html>
+
