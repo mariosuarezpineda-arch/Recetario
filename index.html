@@ -14,36 +14,35 @@
     
     <style>
         /* --- ESTILOS GENERALES Y ESTRUCTURA --- */
-        body { font-family: 'Segoe UI', sans-serif; background-color: #f0f2f5; margin: 0; padding: 20px; color: #333; }
+        body { font-family: 'Segoe UI', sans-serif; background-color: #f0f2f5; margin: 0; padding: 20px; color: #333; overflow-x: hidden; }
         
         .layout { 
-            display: block; /* Cambiamos de flex a block */
+            display: block; 
             max-width: 1400px; 
             margin: auto; 
-            padding-top: 60px; /* Espacio para el botón de menú */
+            padding-top: 60px; 
         }
 
-        /* Sidebar como panel lateral ocultable */
+        /* Sidebar: Corregido para que no se vea nada en móvil cuando está cerrado */
         .sidebar { 
             width: 300px; 
             position: fixed; 
             top: 0; 
-            left: -320px; /* Escondido a la izquierda */
+            left: 0;
+            transform: translateX(-320px); /* Usamos transform para ocultarlo totalmente */
             height: 100%; 
             z-index: 1000; 
-            transition: 0.3s; /* Animación suave */
+            transition: transform 0.3s ease; 
             overflow-y: auto;
             background: #f0f2f5;
             padding: 80px 10px 20px 10px;
             box-shadow: 5px 0 15px rgba(0,0,0,0.1);
         }
 
-        /* Clase que aplicaremos para mostrarlo */
         .sidebar.active {
-            left: 0;
+            transform: translateX(0); /* Se desliza hacia adentro */
         }
 
-        /* Ajuste del contenido para que no se mueva bruscamente */
         .contenido { 
             width: 100%; 
             transition: 0.3s;
@@ -101,8 +100,6 @@
         }
 
         /* --- CONTENIDO PRINCIPAL --- */
-        .contenido { flex-grow: 1; }
-        
         h1 { color: #d35400; text-align: center; margin-top: 0; }
         .formulario, .filtros-seccion { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 25px; }
         
@@ -127,26 +124,29 @@
         .acciones button { flex: 1; border-radius: 0; padding: 10px; font-size: 0.8em; }
         .edit { background: #f39c12; } .del { background: #c0392b; }
 
-        /* --- CHAT --- */
+        /* --- CHAT (Restaurado a tu estilo original) --- */
         #chat-container { position: fixed; bottom: 0; right: 0; width: 50vw; height: 100vh; background: white; box-shadow: -5px 0 30px rgba(0,0,0,0.3); display: none; flex-direction: column; z-index: 10000; border-left: 2px solid #d35400; }
         #chat-btn-open { position: fixed; bottom: 25px; right: 25px; background: #d35400; color: white; border: none; border-radius: 50%; width: 70px; height: 70px; cursor: pointer; font-size: 32px; box-shadow: 0 4px 20px rgba(0,0,0,0.4); z-index: 10001; display: flex; align-items: center; justify-content: center; }
         #chat-header { background-color: #d35400; color: white; padding: 20px; font-weight: bold; display: flex; justify-content: space-between; align-items: center; }
         #chat-messages { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 15px; }
+        
+        /* Texto del chat restaurado a grande */
         .msg { padding: 12px 18px; border-radius: 12px; max-width: 85%; font-size: 1.05em; line-height: 1.6; }
         .user-msg { background: #e1f5fe; align-self: flex-end; }
         .bot-msg { background: #f8f9fa; align-self: flex-start; border-left: 4px solid #d35400; }
 
         @media (max-width: 900px) {
-            .layout { flex-direction: column; }
-            .sidebar { width: 100%; position: relative; top: 0; }
             #chat-container { width: 100vw; }
+            .galeria { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
+
 <button id="menu-toggle" onclick="toggleSidebar()" style="position: fixed; top: 20px; left: 20px; z-index: 1001; background: #d35400; color: white; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer; font-size: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.2);">
     ☰
 </button>
+
 <div class="layout">
     <aside class="sidebar">
         <div class="panel-lateral">
@@ -172,8 +172,7 @@
 
             <div class="seccion-lateral">
                 <h3>⭐ Favoritos</h3>
-                <div id="lista-favs" class="lista-favs">
-                    </div>
+                <div id="lista-favs" class="lista-favs"></div>
                 <button onclick="renderizar()" style="background:#ecf0f1; color:#7f8c8d; font-size:0.75em; margin-top:10px; padding:5px; width:100%; border:1px solid #ddd;">Mostrar todas</button>
             </div>
 
@@ -215,7 +214,7 @@
                 </select>
             </div>
             <button onclick="enviarDatos()" id="btnAccion" style="width: 100%;">Guardar Receta</button>
-            <button onclick="limpiarFormulario()" id="btnCan" class="btn-cancelar" style="display:none; width: 100%; background:#95a5a6; margin-top:10px;">Cancelar Edición</button>
+            <button onclick="limpiarFormulario()" id="btnCan" style="display:none; width: 100%; background:#95a5a6; margin-top:10px;">Cancelar Edición</button>
         </div>
 
         <div class="filtros-seccion">
@@ -277,7 +276,6 @@ db.collection("recetas").orderBy("fecha", "desc").onSnapshot((snapshot) => {
     renderizar();
 });
 
-// --- RENDERIZAR PRINCIPAL ---
 function renderizar(idEspecifico = null) {
     const caja = document.getElementById('listaRecetas');
     const fi = document.getElementById('fIng').value;
@@ -325,7 +323,6 @@ function construirTarjeta(r, contenedor) {
         </div>`;
 }
 
-// --- FAVORITOS Y SIDEBAR ---
 function toggleFav(id) {
     if(favoritos.includes(id)) favoritos = favoritos.filter(f => f !== id);
     else favoritos.push(id);
@@ -337,12 +334,10 @@ function actualizarSidebarFavs() {
     const div = document.getElementById('lista-favs');
     div.innerHTML = '';
     const recFavs = recetasLocales.filter(r => favoritos.includes(r.id));
-    
     if (recFavs.length === 0) {
         div.innerHTML = '<p style="color:#999; font-size:0.8em;">No hay favoritos.</p>';
         return;
     }
-
     recFavs.forEach(r => {
         div.innerHTML += `
             <div class="item-fav" onclick="verRecetaFav('${r.id}')" style="cursor:pointer; padding: 8px 5px; border-bottom: 1px solid #f5f5f5;">
@@ -351,32 +346,41 @@ function actualizarSidebarFavs() {
     });
 }
 
+// CORRECCIÓN: Filtrar receta favorita y cerrar el menú
 function verRecetaFav(id) {
     const receta = recetasLocales.find(r => String(r.id) === String(id));
     if (receta) {
-        
         renderizar(id);
+        const sidebar = document.querySelector('.sidebar');
+        if (sidebar.classList.contains('active')) toggleSidebar(); // Cerramos el menú tras elegir
+        
         setTimeout(() => {
             const el = document.getElementById(`receta-${id}`);
             if(el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }, 200);
+        }, 300);
     }
 }
 
-// --- FILTROS, NOTAS Y OTROS ---
-function sincronizarFiltros(idOrigen) {
-    const val = document.getElementById(idOrigen).value;
-    const tipo = idOrigen.substring(1); // Ing, Ela o Tip
-    document.getElementById('f' + tipo).value = val;
-    document.getElementById('s' + tipo).value = val;
-    renderizar();
+function toggleSidebar() {
+    const sidebar = document.querySelector('.sidebar');
+    const btn = document.getElementById('menu-toggle');
+    sidebar.classList.toggle('active');
+    btn.innerHTML = sidebar.classList.contains('active') ? '✕' : '☰';
 }
 
-const bloc = document.getElementById('bloc-notas');
-bloc.value = localStorage.getItem('user_notas') || '';
-bloc.addEventListener('input', () => localStorage.setItem('user_notas', bloc.value));
-function limpiarNotas() { bloc.value = ''; localStorage.removeItem('user_notas'); }
+function toggleChat() {
+    const chat = document.getElementById('chat-container');
+    const btnOpen = document.getElementById('chat-btn-open');
+    if (chat.style.display === 'flex') {
+        chat.style.display = 'none';
+        btnOpen.style.display = 'flex';
+    } else {
+        chat.style.display = 'flex';
+        btnOpen.style.display = 'none'; // Se oculta para que no tape el botón enviar
+    }
+}
 
+// Resto de funciones (enviarDatos, borrar, etc.)
 async function enviarDatos() {
     const id = document.getElementById('idDoc').value;
     const nombre = document.getElementById('nombre').value;
@@ -410,40 +414,18 @@ function limpiarFormulario() {
 
 function borrarReceta(id) { if(confirm("¿Borrar?")) db.collection("recetas").doc(id).delete(); }
 
-function toggleChat() {
-    const chat = document.getElementById('chat-container');
-    const btnOpen = document.getElementById('chat-btn-open');
-    
-    if (chat.style.display === 'flex') {
-        // Si el chat se está cerrando
-        chat.style.display = 'none';
-        btnOpen.style.display = 'flex'; // Mostramos el botón flotante
-    } else {
-        // Si el chat se está abriendo
-        chat.style.display = 'flex';
-        btnOpen.style.display = 'none'; // Ocultamos el botón flotante
-    }
-}
-function toggleSidebar() {
-    const sidebar = document.querySelector('.sidebar');
-    const btn = document.getElementById('menu-toggle');
-    
-    sidebar.classList.toggle('active');
-    
-    // Cambiamos el icono según el estado
-    if (sidebar.classList.contains('active')) {
-        btn.innerHTML = '✕'; // Icono de cerrar
-    } else {
-        btn.innerHTML = '☰'; // Icono de hamburguesa
-    }
+function sincronizarFiltros(idOrigen) {
+    const val = document.getElementById(idOrigen).value;
+    const tipo = idOrigen.substring(1); 
+    document.getElementById('f' + tipo).value = val;
+    document.getElementById('s' + tipo).value = val;
+    renderizar();
 }
 
-// Opcional: Cerrar el menú automáticamente al seleccionar un favorito
-const originalVerRecetaFav = verRecetaFav;
-verRecetaFav = function(id) {
-    originalVerRecetaFav(id);
-    toggleSidebar(); // Cierra el menú tras elegir la receta
-};
+const bloc = document.getElementById('bloc-notas');
+bloc.value = localStorage.getItem('user_notas') || '';
+bloc.addEventListener('input', () => localStorage.setItem('user_notas', bloc.value));
+function limpiarNotas() { bloc.value = ''; localStorage.removeItem('user_notas'); }
 </script>
 </body>
 </html>
