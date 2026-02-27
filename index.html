@@ -354,11 +354,17 @@
     function toggleChat() {
         const chat = document.getElementById('chat-container');
         const input = document.getElementById('chat-input');
+        const btnOpen = document.getElementById('chat-btn-open'); // Localizamos el botón flotante
+
         if (chat.style.display === 'none' || chat.style.display === '') {
+            // AL ABRIR EL CHAT
             chat.style.display = 'flex';
+            btnOpen.style.display = 'none'; // Ocultamos el botón del Chef
             input.focus();
         } else {
+            // AL CERRAR EL CHAT
             chat.style.display = 'none';
+            btnOpen.style.display = 'flex'; // Volvemos a mostrar el botón del Chef
         }
     }
 
@@ -421,6 +427,7 @@
 </script>
 </body>
 </html>
+
 
 
 
