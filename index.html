@@ -73,6 +73,11 @@
 <div class="layout">
     <aside class="sidebar">
         <div class="panel-lateral">
+			<div class="seccion-lateral" style="text-align: center; background: linear-gradient(135deg, #d35400, #e67e22); color: white; border-radius: 12px; padding: 15px; margin-bottom: 5px; box-shadow: 0 4px 10px rgba(211, 84, 0, 0.3);">
+    <span style="font-size: 0.75em; text-transform: uppercase; font-weight: bold; opacity: 0.9;">Mi Recetario</span>
+    <div id="contador-recetas" style="font-size: 2.2em; font-weight: bold; line-height: 1.2;">0</div>
+    <span style="font-size: 0.75em; opacity: 0.9;">Platos guardados</span>
+</div>
             <div class="seccion-lateral">
                 <h3>🔍 Filtros</h3>
                 <select id="sIng" onchange="sincronizarFiltros('sIng')">
@@ -256,6 +261,7 @@
     });
 
     function renderizar(idEspecifico = null) {
+	document.getElementById('contador-recetas').innerText = recetasLocales.length;
     const caja = document.getElementById('listaRecetas');
     const fi = document.getElementById('fIng').value;
     const fe = document.getElementById('fEla').value;
@@ -563,4 +569,5 @@ function obtenerDatosTecnicos(ing, ela) {
 </script>
 </body>
 </html>
+
 
