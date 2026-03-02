@@ -7,6 +7,7 @@
     <meta name="mobile-web-app-capable" content="yes">
     <link rel="apple-touch-icon" href="https://i.ibb.co/cKR7x4V3/Logo-receta.jpg">
     <link rel="icon" type="image/jpeg" href="https://i.ibb.co/cKR7x4V3/Logo-receta.jpg">
+    <link rel="manifest" href="manifest.json">
     <title>El recetario de Mario y Esther</title>
     
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
@@ -67,7 +68,7 @@
     </style>
 </head>
 <body>
-    <div style="position: absolute; top: 15px; right: 20px; display: flex; gap: 15px; align-items: center;">
+    <div style="position: absolute; top: 15px; right: 20px; display: flex; gap: 15px; align-items: center; z-index: 1000;">
     
     <a href="https://canalcocina.es/" target="_blank" title="Canal Cocina" style="text-decoration: none; text-align: center;">
         <img src="https://i.ibb.co/9jk2DW7/Canalcocina.jpg" alt="Canal Cocina" style="width: 35px; height: 35px; display: block; margin: 0 auto; object-fit: contain;">
@@ -75,17 +76,17 @@
     </a>
 
     <a href="https://www.hogarmania.com/" target="_blank" title="Hogarmania" style="text-decoration: none; text-align: center;">
-        <img src="https://www.hogarmania.com/favicon.ico" style="width: 24px; height: 24px; display: block; margin: 0 auto;">
+        <img src="https://www.hogarmania.com/favicon.ico" alt="Icono Hogarmania" style="width: 24px; height: 24px; display: block; margin: 0 auto;">
         <span style="font-size: 0.6em; color: #333; font-weight: bold; display: block;">hogarmania</span>
     </a>
 
     <a href="https://cookpad.com/es" target="_blank" title="Cookpad" style="text-decoration: none; text-align: center;">
-        <img src="https://cookpad.com/favicon.ico" style="width: 24px; height: 24px; display: block; margin: 0 auto;">
+        <img src="https://cookpad.com/favicon.ico" alt="Icono Cookpad" style="width: 24px; height: 24px; display: block; margin: 0 auto;">
         <span style="font-size: 0.6em; color: #333; font-weight: bold; display: block;">cookpad</span>
     </a>
 
     <a href="https://www.directoalpaladar.com/" target="_blank" title="Directo al Paladar" style="text-decoration: none; text-align: center;">
-        <img src="https://www.directoalpaladar.com/favicon.ico" style="width: 24px; height: 24px; display: block; margin: 0 auto;">
+        <img src="https://www.directoalpaladar.com/favicon.ico" alt="Icono Directo al Paladar" style="width: 24px; height: 24px; display: block; margin: 0 auto;">
         <span style="font-size: 0.6em; color: #333; font-weight: bold; display: block;">paladar</span>
     </a>
 
@@ -627,5 +628,3 @@ async function guardarNota() {
     </div>
 </body>
 </html>
-
-
