@@ -1,0 +1,20 @@
+{
+  "name": "El recetario de Mario y Esther",
+  "short_name": "Recetario M&E",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#556b46",
+  "icons": [
+    {
+      "src": "logo_receta.jpg",
+      "sizes": "192x192",
+      "type": "image/jpeg"
+    },
+    {
+      "src": "logo_receta.jpg",
+      "sizes": "512x512",
+      "type": "image/jpeg"
+    }
+  ]
+}
