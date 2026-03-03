@@ -96,8 +96,8 @@
 
 <button onclick="window.location.href=window.location.pathname+'?v='+new Date().getTime();" style="padding: 10px 15px; background-color: #556b46; color: white; border: none; border-radius: 8px; font-weight: bold; font-size: 1em; cursor: pointer; display: block; margin: 20px auto;">
     🔄 Actualizar Recetario
-</button>	
-	
+</button>
+
 <div class="layout">
     <aside class="sidebar">
         <div class="panel-lateral">
@@ -128,8 +128,8 @@
                     <option value="Patatas">Patatas</option>
 			    	<option value="Carne">Carne</option>
 			    	<option value="Sopas">Sopas</option>
-					<option value="Huevos">Huevos</option>
-					<option value="Pizzas">Pizzas</option>
+                    <option value="Huevos">Huevos</option>
+                    <option value="Pizzas">Pizzas</option>
                 </select>
                 <select id="sEla" onchange="sincronizarFiltros('sEla')">
                     <option value="Todas">Elaboración</option>
@@ -189,8 +189,8 @@
                     <option value="Patatas">Patatas</option>
 			    	<option value="Carne">Carne</option>
 			    	<option value="Sopas">Sopas</option>
-					<option value="Huevos">Huevos</option>
-					<option value="Pizzas">Pizzas</option>
+                    <option value="Huevos">Huevos</option>
+                    <option value="Pizzas">Pizzas</option>
                 </select>
             </div>
 
@@ -235,8 +235,8 @@
                     <option value="Patatas">Patatas</option>
 			    	<option value="Carne">Carne</option>
 			    	<option value="Sopas">Sopas</option>
-					<option value="Huevos">Huevos</option>
-					<option value="Pizzas">Pizzas</option>
+                    <option value="Huevos">Huevos</option>
+                    <option value="Pizzas">Pizzas</option>
                 </select>
                 <select id="fEla" onchange="sincronizarFiltros('fEla')">
                     <option value="Todas">Todas las Elaboraciones</option>
@@ -307,7 +307,7 @@
             caja.innerHTML += `
                 <div class="tarjeta" id="receta-${r.id}">
         <button class="fav-btn" onclick="toggleFav('${r.id}')">${esFav ? '❤️' : '🤍'}</button>
-        <img src="${r.imagen || 'https://via.placeholder.com/300'}">
+        <img src="${r.imagen || 'https://via.placeholder.com/300'}" loading="lazy" decoding="async">
         
         <div class="info" style="display: flex; flex-direction: column;">
             
@@ -518,19 +518,51 @@
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
     
+    function comprimirImagen(archivo, maxWidth, maxHeight, calidad) {
+        return new Promise((resolve) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(archivo);
+            reader.onload = (event) => {
+                const img = new Image();
+                img.src = event.target.result;
+                img.onload = () => {
+                    const canvas = document.createElement('canvas');
+                    let width = img.width;
+                    let height = img.height;
+
+                    // Calculamos las nuevas medidas manteniendo la proporción
+                    if (width > height) {
+                        if (width > maxWidth) { height *= maxWidth / width; width = maxWidth; }
+                    } else {
+                        if (height > maxHeight) { width *= maxHeight / height; height = maxHeight; }
+                    }
+
+                    canvas.width = width;
+                    canvas.height = height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, width, height);
+                    
+                    // Devolvemos la imagen comprimida en formato JPEG
+                    resolve(canvas.toDataURL('image/jpeg', calidad));
+                };
+            };
+        });
+    }
+
     async function enviarDatos() {
         const id = document.getElementById('idDoc').value;
         const nombre = document.getElementById('nombre').value;
         const archivo = document.getElementById('foto').files[0];
+        
         if(!nombre) return alert("Nombre obligatorio");
+        
         let imgFinal = recetasLocales.find(r => r.id === id)?.imagen || "https://via.placeholder.com/300";
+        
+        // AQUÍ ESTÁ LA MAGIA NUEVA: Comprimimos a 800px y calidad del 70% (0.7)
         if(archivo) {
-            const reader = new FileReader();
-            imgFinal = await new Promise(res => {
-                reader.onload = () => res(reader.result);
-                reader.readAsDataURL(archivo);
-            });
+            imgFinal = await comprimirImagen(archivo, 800, 800, 0.7);
         }
+        
         const datos = {
             nombre, video: document.getElementById('video').value,
             ingrediente: document.getElementById('ingrediente').value,
@@ -538,6 +570,7 @@
             tipo: document.getElementById('tipo').value,
             imagen: imgFinal, fecha: new Date()
         };
+        
         id ? await db.collection("recetas").doc(id).update(datos) : await db.collection("recetas").add(datos);
         limpiarFormulario();
     }
@@ -643,9 +676,4 @@ async function guardarNota() {
         </div>
     </div>
 </body>
-
 </html>
-
-
-
-
