@@ -305,22 +305,28 @@
                 <div class="tarjeta" id="receta-${r.id}">
         <button class="fav-btn" onclick="toggleFav('${r.id}')">${esFav ? '❤️' : '🤍'}</button>
         <img src="${r.imagen || 'https://via.placeholder.com/300'}">
-        <div class="info">
-            <h3 style="margin:0;">${r.nombre}</h3>
-            <span class="tag tag-ing">${r.ingrediente}</span>
-            <span class="tag tag-ela">${r.elaboracion}</span>
-            <span class="tag tag-tip">${r.tipo}</span>
+        
+        <div class="info" style="display: flex; flex-direction: column;">
             
-            <div style="margin-top:10px; display:flex; gap:15px; align-items:center; flex-wrap: wrap;">
-                ${r.video ? `<a href="${r.video}" target="_blank" style="color:#2980b9; font-size:0.85em; text-decoration:none; font-weight:bold; display:flex; align-items:center; gap:4px;">🎬 Vídeo</a>` : ''}
-    
-                <span onclick="abrirNotasReceta('${r.id}')" style="cursor:pointer; font-size:0.85em; font-weight:bold; color:#e67e22; display:flex; align-items:center; gap:4px;" title="Ver mis anotaciones">
-                    📝 <span style="text-decoration: underline;">Notas</span>
-                </span>
+            <div> <h3 style="margin:0;">${r.nombre}</h3>
+                <span class="tag tag-ing">${r.ingrediente}</span>
+                <span class="tag tag-ela">${r.elaboracion}</span>
+                <span class="tag tag-tip">${r.tipo}</span>
+                
+                <div style="margin-top:10px; display:flex; gap:15px; align-items:center; flex-wrap: wrap;">
+                    ${r.video ? `<a href="${r.video}" target="_blank" style="color:#2980b9; font-size:0.85em; text-decoration:none; font-weight:bold; display:flex; align-items:center; gap:4px;">🎬 Vídeo</a>` : ''}
+        
+                    <span onclick="abrirNotasReceta('${r.id}')" style="cursor:pointer; font-size:0.85em; font-weight:bold; color:#e67e22; display:flex; align-items:center; gap:4px;" title="Ver mis anotaciones">
+                        📝 <span style="text-decoration: underline;">Notas</span>
+                    </span>
+                </div>
             </div>
             
-            <button onclick="consultarReceta('${r.id}')" style="margin-top:12px; width:100%; background:#27ae60; font-size:0.85em; padding:10px; border-radius:6px; border:none; color:white; cursor:pointer; font-weight:bold;">Preguntar al Chef 👨‍🍳</button>
-            <button onclick="compartirWhatsApp('${r.id}')" style="margin-top:8px; width:100%; background:#25D366; font-size:0.85em; padding:10px; border-radius:6px; border:none; color:white; cursor:pointer; font-weight:bold; display:flex; align-items:center; justify-content:center; gap:8px;">Enviar por WhatsApp 📱</button>
+            <div style="margin-top: auto; padding-top: 15px;">
+                <button onclick="consultarReceta('${r.id}')" style="width:100%; background:#27ae60; font-size:0.85em; padding:10px; border-radius:6px; border:none; color:white; cursor:pointer; font-weight:bold;">Preguntar al Chef 👨‍🍳</button>
+                <button onclick="compartirWhatsApp('${r.id}')" style="margin-top:8px; width:100%; background:#25D366; font-size:0.85em; padding:10px; border-radius:6px; border:none; color:white; cursor:pointer; font-weight:bold; display:flex; align-items:center; justify-content:center; gap:8px;">Enviar por WhatsApp 📱</button>
+            </div>
+            
         </div>
         <div class="acciones">
             <button class="edit" onclick="prepararEdicion('${r.id}')">Editar</button>
@@ -636,5 +642,6 @@ async function guardarNota() {
 </body>
 
 </html>
+
 
 
