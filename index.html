@@ -94,6 +94,10 @@
 
 <button id="menu-toggle" onclick="toggleSidebar()" style="position: fixed; top: 20px; left: 20px; z-index: 1001; background: #d35400; color: white; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer; font-size: 20px;">☰</button>
 
+<button onclick="window.location.href=window.location.pathname+'?v='+new Date().getTime();" style="padding: 10px 15px; background-color: #556b46; color: white; border: none; border-radius: 8px; font-weight: bold; font-size: 1em; cursor: pointer; display: block; margin: 20px auto;">
+    🔄 Actualizar Recetario
+</button>	
+	
 <div class="layout">
     <aside class="sidebar">
         <div class="panel-lateral">
@@ -629,3 +633,4 @@ async function guardarNota() {
 </body>
 
 </html>
+
