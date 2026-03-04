@@ -252,6 +252,7 @@
                 </select>
                 
                 <button onclick="verTodasLasRecetas()" style="background-color: #3498db; min-width: 150px;">👀 Ver todas</button>
+                <button onclick="limpiarFiltros()" style="background-color: #95a5a6; min-width: 150px;">🧹 Limpiar filtros</button>
             </div>
         </div>
         
@@ -551,6 +552,22 @@
         renderizar();
     }
 
+    // Nueva función para limpiar los filtros y volver a la imagen inicial
+    function limpiarFiltros() {
+        mostrarLista = false; // ¡Apagamos el interruptor para ocultar las recetas!
+        
+        // Reiniciamos todos los selectores a su estado base
+        document.getElementById('fIng').value = 'Todos';
+        document.getElementById('sIng').value = 'Todos';
+        document.getElementById('fEla').value = 'Todas';
+        document.getElementById('sEla').value = 'Todas';
+        document.getElementById('fTip').value = 'Todos';
+        document.getElementById('sTip').value = 'Todos';
+        
+        // Recargamos la vista
+        renderizar();
+    }
+
     function verRecetaFav(id) { renderizar(id); toggleSidebar(); }
     
     function prepararEdicion(id) {
@@ -721,6 +738,7 @@ async function guardarNota() {
     </div>
 </body>
 </html>
+
 
 
 
