@@ -68,36 +68,30 @@
     </style>
 </head>
 <body>
-    <div style="position: absolute; top: 15px; right: 20px; display: flex; gap: 15px; align-items: center; z-index: 1000;">
-    
-    <a href="https://canalcocina.es/" target="_blank" title="Canal Cocina" style="text-decoration: none; text-align: center;">
-        <img src="https://i.ibb.co/9jk2DW7/Canalcocina.jpg" alt="Canal Cocina" style="width: 35px; height: 35px; display: block; margin: 0 auto; object-fit: contain;">
-        <span style="font-size: 0.6em; color: #333; font-weight: bold; display: block;">canalcocina</span>
-    </a>
+    <div style="display: flex; justify-content: flex-end; flex-wrap: wrap; gap: 15px; padding: 15px 20px 10px 70px; z-index: 1000; align-items: flex-end;">
+        <a href="https://canalcocina.es/" target="_blank" title="Canal Cocina" style="text-decoration: none; text-align: center;">
+            <img src="https://i.ibb.co/9jk2DW7/Canalcocina.jpg" alt="Canal Cocina" style="width: 35px; height: 35px; display: block; margin: 0 auto; object-fit: contain;">
+            <span style="font-size: 0.6em; color: #333; font-weight: bold; display: block;">canalcocina</span>
+        </a>
+        <a href="https://www.hogarmania.com/" target="_blank" title="Hogarmania" style="text-decoration: none; text-align: center;">
+            <img src="https://www.hogarmania.com/favicon.ico" alt="Icono Hogarmania" style="width: 24px; height: 24px; display: block; margin: 0 auto;">
+            <span style="font-size: 0.6em; color: #333; font-weight: bold; display: block;">hogarmania</span>
+        </a>
+        <a href="https://cookpad.com/es" target="_blank" title="Cookpad" style="text-decoration: none; text-align: center;">
+            <img src="https://cookpad.com/favicon.ico" alt="Icono Cookpad" style="width: 24px; height: 24px; display: block; margin: 0 auto;">
+            <span style="font-size: 0.6em; color: #333; font-weight: bold; display: block;">cookpad</span>
+        </a>
+        <a href="https://www.directoalpaladar.com/" target="_blank" title="Directo al Paladar" style="text-decoration: none; text-align: center;">
+            <img src="https://www.directoalpaladar.com/favicon.ico" alt="Icono Directo al Paladar" style="width: 24px; height: 24px; display: block; margin: 0 auto;">
+            <span style="font-size: 0.6em; color: #333; font-weight: bold; display: block;">paladar</span>
+        </a>
+    </div>
 
-    <a href="https://www.hogarmania.com/" target="_blank" title="Hogarmania" style="text-decoration: none; text-align: center;">
-        <img src="https://www.hogarmania.com/favicon.ico" alt="Icono Hogarmania" style="width: 24px; height: 24px; display: block; margin: 0 auto;">
-        <span style="font-size: 0.6em; color: #333; font-weight: bold; display: block;">hogarmania</span>
-    </a>
+    <button id="menu-toggle" onclick="toggleSidebar()" style="position: fixed; top: 15px; left: 15px; z-index: 1001; background: #d35400; color: white; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer; font-size: 20px;">☰</button>
 
-    <a href="https://cookpad.com/es" target="_blank" title="Cookpad" style="text-decoration: none; text-align: center;">
-        <img src="https://cookpad.com/favicon.ico" alt="Icono Cookpad" style="width: 24px; height: 24px; display: block; margin: 0 auto;">
-        <span style="font-size: 0.6em; color: #333; font-weight: bold; display: block;">cookpad</span>
-    </a>
-
-    <a href="https://www.directoalpaladar.com/" target="_blank" title="Directo al Paladar" style="text-decoration: none; text-align: center;">
-        <img src="https://www.directoalpaladar.com/favicon.ico" alt="Icono Directo al Paladar" style="width: 24px; height: 24px; display: block; margin: 0 auto;">
-        <span style="font-size: 0.6em; color: #333; font-weight: bold; display: block;">paladar</span>
-    </a>
-
-</div>
-
-<button id="menu-toggle" onclick="toggleSidebar()" style="position: fixed; top: 20px; left: 20px; z-index: 1001; background: #d35400; color: white; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer; font-size: 20px;">☰</button>
-
-<button onclick="window.location.href=window.location.pathname+'?v='+new Date().getTime();" style="padding: 10px 15px; background-color: #556b46; color: white; border: none; border-radius: 8px; font-weight: bold; font-size: 1em; cursor: pointer; display: block; margin: 20px auto;">
-    🔄 Actualizar Recetario
-</button>
-
+    <button onclick="window.location.href=window.location.pathname+'?v='+new Date().getTime();" style="padding: 10px 15px; background-color: #556b46; color: white; border: none; border-radius: 8px; font-weight: bold; font-size: 1em; cursor: pointer; display: block; margin: 5px auto 25px auto;">
+        🔄 Actualizar Recetario
+    </button>
 <div class="layout">
     <aside class="sidebar">
         <div class="panel-lateral">
@@ -716,3 +710,4 @@ async function guardarNota() {
     </div>
 </body>
 </html>
+
