@@ -302,7 +302,17 @@
         // --- NUEVA REGLA DEL CERROJO ---
         // Si el interruptor está apagado y no estamos buscando una receta favorita específica
         if (!mostrarLista && !idEspecifico) {
-            caja.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; padding: 40px 20px; color: #7f8c8d; font-size: 1.1em; background: white; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">👆 Selecciona un filtro arriba o pulsa "👀 Ver todas" para comenzar a cocinar.</div>';
+            caja.innerHTML = `
+                <div style="grid-column: 1 / -1; display: flex; flex-direction: column; gap: 20px; align-items: center;">
+                    <div style="width: 100%; text-align: center; padding: 20px; color: #7f8c8d; font-size: 1.1em; background: white; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); box-sizing: border-box;">
+                        👆 Selecciona un filtro arriba o pulsa "👀 Ver todas" para comenzar a cocinar.
+                    </div>
+                    
+                    <div style="width: 100%; background: white; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); padding: 20px; box-sizing: border-box; text-align: center;">
+                        <img src="Foto_chef.jpg" alt="Nuestros Chefs: Mario y Esther" style="max-width: 100%; height: auto; border-radius: 8px; object-fit: contain;">
+                    </div>
+                </div>
+            `;
             actualizarSidebarFavs();
             return; // Detenemos la función aquí
         }
@@ -710,4 +720,5 @@ async function guardarNota() {
     </div>
 </body>
 </html>
+
 
