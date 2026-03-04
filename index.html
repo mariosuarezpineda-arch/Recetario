@@ -126,8 +126,8 @@
                     <option value="Repostería">Repostería</option>
                     <option value="Guisos">Guisos</option>
                     <option value="Patatas">Patatas</option>
-			    	<option value="Carne">Carne</option>
-			    	<option value="Sopas">Sopas</option>
+                    <option value="Carne">Carne</option>
+                    <option value="Sopas">Sopas</option>
                     <option value="Huevos">Huevos</option>
                     <option value="Pizzas">Pizzas</option>
                 </select>
@@ -152,7 +152,7 @@
             <div class="seccion-lateral">
                 <h3>⭐ Favoritos</h3>
                 <div id="lista-favs" class="lista-favs"></div>
-                <button onclick="renderizar()" style="background:#ecf0f1; color:#7f8c8d; font-size:0.75em; margin-top:10px; padding:5px; width:100%; border:1px solid #ddd;">Mostrar todas</button>
+                <button onclick="verTodasLasRecetas()" style="background:#ecf0f1; color:#7f8c8d; font-size:0.75em; margin-top:10px; padding:5px; width:100%; border:1px solid #ddd;">Mostrar todas</button>
             </div>
             <div class="seccion-lateral">
                 <h3>📝 Bloc de Notas</h3>
@@ -187,8 +187,8 @@
                     <option value="Repostería">Repostería</option>
                     <option value="Guisos">Guisos</option>
                     <option value="Patatas">Patatas</option>
-			    	<option value="Carne">Carne</option>
-			    	<option value="Sopas">Sopas</option>
+                    <option value="Carne">Carne</option>
+                    <option value="Sopas">Sopas</option>
                     <option value="Huevos">Huevos</option>
                     <option value="Pizzas">Pizzas</option>
                 </select>
@@ -213,6 +213,7 @@
             <button onclick="enviarDatos()" id="btnAccion" style="width: 100%;">Guardar Receta</button>
             <button onclick="limpiarFormulario()" id="btnCan" style="display:none; width: 100%; background:#95a5a6; margin-top:10px;">Cancelar Edición</button>
         </div>
+        
         <div class="filtros-seccion">
             <div class="fila">
                 <select id="fIng" onchange="sincronizarFiltros('fIng')">
@@ -233,8 +234,8 @@
                     <option value="Repostería">Repostería</option>
                     <option value="Guisos">Guisos</option>
                     <option value="Patatas">Patatas</option>
-			    	<option value="Carne">Carne</option>
-			    	<option value="Sopas">Sopas</option>
+                    <option value="Carne">Carne</option>
+                    <option value="Sopas">Sopas</option>
                     <option value="Huevos">Huevos</option>
                     <option value="Pizzas">Pizzas</option>
                 </select>
@@ -254,8 +255,11 @@
                     <option value="Acompañamiento">Acompañamiento</option>
                     <option value="Merienda">Merienda</option>
                 </select>
+                
+                <button onclick="verTodasLasRecetas()" style="background-color: #3498db; min-width: 150px;">👀 Ver todas</button>
             </div>
         </div>
+        
         <div class="galeria" id="listaRecetas"></div>
     </main>
 </div>
@@ -284,7 +288,9 @@
     };
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
+    
     let recetasLocales = [];
+    let mostrarLista = false; // <-- NUESTRO NUEVO INTERRUPTOR APAGADO POR DEFECTO
 
     db.collection("recetas").orderBy("fecha", "desc").onSnapshot((snapshot) => {
         recetasLocales = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
@@ -292,59 +298,67 @@
     });
 
     function renderizar(idEspecifico = null) {
-    document.getElementById('contador-recetas').innerText = recetasLocales.length;    
-    const caja = document.getElementById('listaRecetas');
-    const fi = document.getElementById('fIng').value;
-    const fe = document.getElementById('fEla').value;
-    const ft = document.getElementById('fTip').value;
-    caja.innerHTML = '';
+        document.getElementById('contador-recetas').innerText = recetasLocales.length;    
+        const caja = document.getElementById('listaRecetas');
+        const fi = document.getElementById('fIng').value;
+        const fe = document.getElementById('fEla').value;
+        const ft = document.getElementById('fTip').value;
+        caja.innerHTML = '';
 
-    recetasLocales.forEach(r => {
-        if (idEspecifico ? String(r.id) === String(idEspecifico) : (fi === 'Todos' || r.ingrediente === fi) && (fe === 'Todas' || r.elaboracion === fe) && (ft === 'Todos' || r.tipo === ft)) {
-            const esFav = r.esFavorito === true; 
-            
-            // Aquí está la construcción de la tarjeta
-            caja.innerHTML += `
-                <div class="tarjeta" id="receta-${r.id}">
-        <button class="fav-btn" onclick="toggleFav('${r.id}')">${esFav ? '❤️' : '🤍'}</button>
-        <img src="${r.imagen || 'https://via.placeholder.com/300'}" loading="lazy" decoding="async">
-        
-        <div class="info" style="display: flex; flex-direction: column;">
-            
-            <div> <h3 style="margin:0;">${r.nombre}</h3>
-                <span class="tag tag-ing">${r.ingrediente}</span>
-                <span class="tag tag-ela">${r.elaboracion}</span>
-                <span class="tag tag-tip">${r.tipo}</span>
-                
-                <div style="margin-top:10px; display:flex; gap:15px; align-items:center; flex-wrap: wrap;">
-                    ${r.video ? `<a href="${r.video}" target="_blank" style="color:#2980b9; font-size:0.85em; text-decoration:none; font-weight:bold; display:flex; align-items:center; gap:4px;">🎬 Vídeo</a>` : ''}
-        
-                    <span onclick="abrirNotasReceta('${r.id}')" style="cursor:pointer; font-size:0.85em; font-weight:bold; color:#e67e22; display:flex; align-items:center; gap:4px;" title="Ver mis anotaciones">
-                        📝 <span style="text-decoration: underline;">Notas</span>
-                    </span>
-                </div>
-            </div>
-            
-            <div style="margin-top: auto; padding-top: 15px;">
-                <button onclick="consultarReceta('${r.id}')" style="width:100%; background:#27ae60; font-size:0.85em; padding:10px; border-radius:6px; border:none; color:white; cursor:pointer; font-weight:bold;">Preguntar al Chef 👨‍🍳</button>
-                <button onclick="compartirWhatsApp('${r.id}')" style="margin-top:8px; width:100%; background:#25D366; font-size:0.85em; padding:10px; border-radius:6px; border:none; color:white; cursor:pointer; font-weight:bold; display:flex; align-items:center; justify-content:center; gap:8px;">
-    Enviar por WhatsApp
-    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
-        <path d="M13.601 2.326A7.85 7.85 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.9 7.9 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.9 7.9 0 0 0 13.6 2.326zM7.994 14.521a6.6 6.6 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.56 6.56 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592m3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.73.73 0 0 0-.529.247c-.182.198-.691.677-.691 1.654s.71 1.916.81 2.049c.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232"/>
-    </svg>
-</button>
-            </div>
-            
-        </div>
-        <div class="acciones">
-            <button class="edit" onclick="prepararEdicion('${r.id}')">Editar</button>
-            <button class="del" onclick="borrarReceta('${r.id}')">Borrar</button>
-        </div>
-    </div>`;
+        // --- NUEVA REGLA DEL CERROJO ---
+        // Si el interruptor está apagado y no estamos buscando una receta favorita específica
+        if (!mostrarLista && !idEspecifico) {
+            caja.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; padding: 40px 20px; color: #7f8c8d; font-size: 1.1em; background: white; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">👆 Selecciona un filtro arriba o pulsa "👀 Ver todas" para comenzar a cocinar.</div>';
+            actualizarSidebarFavs();
+            return; // Detenemos la función aquí
         }
-    });
-    actualizarSidebarFavs();
-}
+
+        recetasLocales.forEach(r => {
+            if (idEspecifico ? String(r.id) === String(idEspecifico) : (fi === 'Todos' || r.ingrediente === fi) && (fe === 'Todas' || r.elaboracion === fe) && (ft === 'Todos' || r.tipo === ft)) {
+                const esFav = r.esFavorito === true; 
+                
+                // Aquí está la construcción de la tarjeta
+                caja.innerHTML += `
+                    <div class="tarjeta" id="receta-${r.id}">
+            <button class="fav-btn" onclick="toggleFav('${r.id}')">${esFav ? '❤️' : '🤍'}</button>
+            <img src="${r.imagen || 'https://via.placeholder.com/300'}" loading="lazy" decoding="async">
+            
+            <div class="info" style="display: flex; flex-direction: column;">
+                
+                <div> <h3 style="margin:0;">${r.nombre}</h3>
+                    <span class="tag tag-ing">${r.ingrediente}</span>
+                    <span class="tag tag-ela">${r.elaboracion}</span>
+                    <span class="tag tag-tip">${r.tipo}</span>
+                    
+                    <div style="margin-top:10px; display:flex; gap:15px; align-items:center; flex-wrap: wrap;">
+                        ${r.video ? `<a href="${r.video}" target="_blank" style="color:#2980b9; font-size:0.85em; text-decoration:none; font-weight:bold; display:flex; align-items:center; gap:4px;">🎬 Vídeo</a>` : ''}
+            
+                        <span onclick="abrirNotasReceta('${r.id}')" style="cursor:pointer; font-size:0.85em; font-weight:bold; color:#e67e22; display:flex; align-items:center; gap:4px;" title="Ver mis anotaciones">
+                            📝 <span style="text-decoration: underline;">Notas</span>
+                        </span>
+                    </div>
+                </div>
+                
+                <div style="margin-top: auto; padding-top: 15px;">
+                    <button onclick="consultarReceta('${r.id}')" style="width:100%; background:#27ae60; font-size:0.85em; padding:10px; border-radius:6px; border:none; color:white; cursor:pointer; font-weight:bold;">Preguntar al Chef 👨‍🍳</button>
+                    <button onclick="compartirWhatsApp('${r.id}')" style="margin-top:8px; width:100%; background:#25D366; font-size:0.85em; padding:10px; border-radius:6px; border:none; color:white; cursor:pointer; font-weight:bold; display:flex; align-items:center; justify-content:center; gap:8px;">
+        Enviar por WhatsApp
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
+            <path d="M13.601 2.326A7.85 7.85 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.9 7.9 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.9 7.9 0 0 0 13.6 2.326zM7.994 14.521a6.6 6.6 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.56 6.56 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592m3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.73.73 0 0 0-.529.247c-.182.198-.691.677-.691 1.654s.71 1.916.81 2.049c.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232"/>
+        </svg>
+    </button>
+                </div>
+                
+            </div>
+            <div class="acciones">
+                <button class="edit" onclick="prepararEdicion('${r.id}')">Editar</button>
+                <button class="del" onclick="borrarReceta('${r.id}')">Borrar</button>
+            </div>
+        </div>`;
+            }
+        });
+        actualizarSidebarFavs();
+    }
 
     async function toggleFav(id) {
         const receta = recetasLocales.find(r => r.id === id);
@@ -506,14 +520,34 @@
 }
 
     function toggleSidebar() { const s = document.querySelector('.sidebar'); s.classList.toggle('active'); }
+    
+    // Función que se activa al elegir un filtro
     function sincronizarFiltros(id) { 
+        mostrarLista = true; // Abrimos el cerrojo
         const val = document.getElementById(id).value; 
         const tipo = id.substring(1); 
         document.getElementById('f'+tipo).value = val; 
         document.getElementById('s'+tipo).value = val; 
         renderizar(); 
     }
+
+    // Nueva función para el botón "Ver todas"
+    function verTodasLasRecetas() {
+        mostrarLista = true; // Abrimos el cerrojo
+        
+        // Reiniciamos los selectores a su estado base
+        document.getElementById('fIng').value = 'Todos';
+        document.getElementById('sIng').value = 'Todos';
+        document.getElementById('fEla').value = 'Todas';
+        document.getElementById('sEla').value = 'Todas';
+        document.getElementById('fTip').value = 'Todos';
+        document.getElementById('sTip').value = 'Todos';
+        
+        renderizar();
+    }
+
     function verRecetaFav(id) { renderizar(id); toggleSidebar(); }
+    
     function prepararEdicion(id) {
         const r = recetasLocales.find(rec => rec.id === id);
         document.getElementById('idDoc').value = r.id;
@@ -563,7 +597,7 @@
         
         let imgFinal = recetasLocales.find(r => r.id === id)?.imagen || "https://via.placeholder.com/300";
         
-        // AQUÍ ESTÁ LA MAGIA NUEVA: Comprimimos a 800px y calidad del 70% (0.7)
+        // MAGIA DE COMPRESIÓN ACTIVA
         if(archivo) {
             imgFinal = await comprimirImagen(archivo, 800, 800, 0.7);
         }
@@ -682,4 +716,3 @@ async function guardarNota() {
     </div>
 </body>
 </html>
-
