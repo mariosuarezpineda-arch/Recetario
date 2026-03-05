@@ -294,7 +294,12 @@
 
     db.collection("recetas").orderBy("fecha", "desc").onSnapshot((snapshot) => {
         recetasLocales = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        if (mostrarLista) renderizar(); // Solo re-dibuja si el cerrojo está abierto
+        
+        // ¡Magia extra! Actualizamos el contador del menú lateral en segundo plano
+        document.getElementById('contador-recetas').innerText = recetasLocales.length;
+        actualizarSidebarFavs(); 
+
+        if (mostrarLista) renderizar(); // Solo dibuja las tarjetas si el cerrojo está abierto
     });
 
     function renderizar(idEspecifico = null) {
@@ -742,4 +747,5 @@ async function guardarNota() {
     </div>
 </body>
 </html>
+
 
