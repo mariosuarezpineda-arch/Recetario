@@ -79,6 +79,8 @@
             transform: skewY(-15deg); /* Dobla la cola derecha hacia abajo */
         }
         .formulario, .filtros-seccion { background: white; padding: 25px; border-radius: 12px; border: 2px solid #000000; box-shadow: 0 10px 30px rgba(0,0,0,0.15); margin-bottom: 25px; }        .fila > * { flex: 1; min-width: 200px; }
+        .fila { display: flex; gap: 15px; flex-wrap: wrap; margin-bottom: 15px; }
+        .fila > * { flex: 1; min-width: 200px; }
         input, select { border: 1px solid #ddd; border-radius: 6px; padding: 12px; width: 100%; box-sizing: border-box; }
         
         button { background-color: #27ae60; color: white; border: none; font-weight: bold; cursor: pointer; border-radius: 6px; padding: 12px; transition: 0.3s; }
@@ -810,4 +812,5 @@ async function guardarNota() {
     </div>
 </body>
 </html>
+
 
