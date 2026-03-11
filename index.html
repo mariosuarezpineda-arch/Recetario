@@ -14,37 +14,78 @@
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-firestore-compat.js"></script>
     
     <style>
-        /* --- ESTILOS GENERALES --- */
-        body { font-family: 'Segoe UI', sans-serif; background-color: #f0f2f5; margin: 0; padding: 20px; color: #333; overflow-x: hidden; }
+        /* --- ESTILOS GENERALES (Con mantel de cuadros ROJOS Y BLANCOS INTENSOS) --- */
+        body { 
+            font-family: 'Segoe UI', sans-serif; 
+            background-color: #ffffff; /* Base blanca pura */
+            background-image: 
+                linear-gradient(rgba(180, 0, 0, 0.2) 50%, transparent 50%), /* Rojo intenso, 20% opacidad */
+                linear-gradient(90deg, rgba(180, 0, 0, 0.2) 50%, transparent 50%);
+            background-size: 50px 50px; /* Tamaño grande de cuadros Vichy */
+            margin: 0; 
+            padding: 20px; 
+            color: #333; 
+            overflow-x: hidden; 
+        }
+
         .layout { display: block; max-width: 1400px; margin: auto; padding-top: 60px; }
 
         .sidebar { 
             width: 300px; position: fixed; top: 0; left: 0;
             transform: translateX(-320px); height: 100%; z-index: 1000; 
             transition: transform 0.3s ease; overflow-y: auto;
-            background: #f0f2f5; padding: 80px 10px 20px 10px;
+            background: #ffffff; padding: 80px 10px 20px 10px;
             box-shadow: 5px 0 15px rgba(0,0,0,0.1);
         }
         .sidebar.active { transform: translateX(0); }
 
-        .panel-lateral { background: white; border-radius: 12px; padding: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); display: flex; flex-direction: column; gap: 25px; }
-        .seccion-lateral h3 { margin: 0 0 15px 0; font-size: 1.1em; color: #d35400; display: flex; align-items: center; gap: 8px; }
-        
+        .panel-lateral { background: white; border-radius: 12px; padding: 20px; border: 2px solid #000000; box-shadow: 0 10px 30px rgba(0,0,0,0.15); display: flex; flex-direction: column; gap: 25px; }        
         #bloc-notas { width: 100%; height: 120px; border: none; background: #fff9e6; padding: 10px; border-radius: 8px; font-family: inherit; resize: none; box-sizing: border-box; }
 
-        h1 { color: #d35400; text-align: center; margin-top: 0; }
-        .formulario, .filtros-seccion { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 25px; }
-        .fila { display: flex; gap: 15px; flex-wrap: wrap; margin-bottom: 15px; }
-        .fila > * { flex: 1; min-width: 200px; }
+        /* --- TÍTULO PRINCIPAL (Estilo Cinta Medieval) --- */
+        .contenedor-titulo { 
+            text-align: center; 
+            margin: 10px 0 40px 0; 
+            padding: 0 20px; 
+        }
+        .cinta-medieval {
+            display: inline-block;
+            position: relative;
+            background: #ffffff;
+            color: #b40000;
+            padding: 15px 40px;
+            margin: 0;
+            border: 2px solid #000000;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            font-size: 2.2em;
+        }
+        /* Las colas de la cinta que van por detrás */
+        .cinta-medieval::before, .cinta-medieval::after {
+            content: '';
+            position: absolute;
+            top: 15px;
+            width: 40px;
+            height: 100%;
+            background: #e8e8e8; /* Gris clarito para dar sombra y profundidad */
+            border: 2px solid #000000;
+            z-index: -1;
+        }
+        .cinta-medieval::before {
+            left: -20px;
+            transform: skewY(15deg); /* Dobla la cola izquierda hacia abajo */
+        }
+        .cinta-medieval::after {
+            right: -20px;
+            transform: skewY(-15deg); /* Dobla la cola derecha hacia abajo */
+        }
+        .formulario, .filtros-seccion { background: white; padding: 25px; border-radius: 12px; border: 2px solid #000000; box-shadow: 0 10px 30px rgba(0,0,0,0.15); margin-bottom: 25px; }        .fila > * { flex: 1; min-width: 200px; }
         input, select { border: 1px solid #ddd; border-radius: 6px; padding: 12px; width: 100%; box-sizing: border-box; }
         
         button { background-color: #27ae60; color: white; border: none; font-weight: bold; cursor: pointer; border-radius: 6px; padding: 12px; transition: 0.3s; }
         button:hover { background-color: #219150; }
 
         .galeria { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px; }
-        .tarjeta { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.08); display: flex; flex-direction: column; position: relative; }
-        .tarjeta img { width: 100%; height: 180px; object-fit: cover; }
-        
+        .tarjeta { background: white; border-radius: 12px; overflow: hidden; border: 2px solid #000000; box-shadow: 0 10px 25px rgba(0,0,0,0.15); display: flex; flex-direction: column; position: relative; }        
         .fav-btn { position: absolute; top: 10px; right: 10px; background: white; border: none; border-radius: 50%; width: 35px; height: 35px; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.2); font-size: 18px; z-index: 10; }
 
         .info { padding: 15px; flex-grow: 1; }
@@ -56,38 +97,58 @@
         .edit { background: #f39c12; } .del { background: #c0392b; }
 
         /* Chat Estilo Original */
-        #chat-container { position: fixed; bottom: 0; right: 0; width: 50vw; height: 100vh; background: white; box-shadow: -5px 0 30px rgba(0,0,0,0.3); display: none; flex-direction: column; z-index: 10000; border-left: 2px solid #d35400; }
-        #chat-btn-open { position: fixed; bottom: 25px; right: 25px; background: #d35400; color: white; border: none; border-radius: 50%; width: 70px; height: 70px; cursor: pointer; font-size: 32px; box-shadow: 0 4px 20px rgba(0,0,0,0.4); z-index: 10001; display: flex; align-items: center; justify-content: center; }
-        #chat-header { background-color: #d35400; color: white; padding: 20px; font-weight: bold; display: flex; justify-content: space-between; align-items: center; }
+        #chat-container { position: fixed; bottom: 0; right: 0; width: 50vw; height: 100vh; background: white; box-shadow: -5px 0 30px rgba(0,0,0,0.3); display: none; flex-direction: column; z-index: 10000; border-left: 2px solid #b40000; }
+        #chat-btn-open { position: fixed; bottom: 25px; right: 25px; background: #b40000; color: white; border: none; border-radius: 50%; width: 70px; height: 70px; cursor: pointer; font-size: 32px; box-shadow: 0 4px 20px rgba(0,0,0,0.4); z-index: 10001; display: flex; align-items: center; justify-content: center; }
+        #chat-header { background-color: #b40000; color: white; padding: 20px; font-weight: bold; display: flex; justify-content: space-between; align-items: center; }
         #chat-messages { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 15px; }
         .msg { padding: 12px 18px; border-radius: 12px; max-width: 85%; font-size: 1.05em; line-height: 1.6; }
         .user-msg { background: #e1f5fe; align-self: flex-end; }
-        .bot-msg { background: #f8f9fa; align-self: flex-start; border-left: 4px solid #d35400; }
+        .bot-msg { background: #f8f9fa; align-self: flex-start; border-left: 4px solid #b40000; }
+
+        /* --- ESTILO PARA LOS ENLACES EXTERNOS --- */
+        .enlace-externo {
+            background-color: white;
+            border: 2px solid #000000;
+            border-radius: 8px;
+            padding: 6px 10px;
+            text-decoration: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+        }
+        .enlace-externo span {
+            font-size: 0.6em;
+            color: #333;
+            font-weight: bold;
+            margin-top: 4px;
+        }
 
         @media (max-width: 900px) { #chat-container { width: 100vw; } .galeria { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
-    <div style="display: flex; justify-content: flex-end; flex-wrap: wrap; gap: 15px; padding: 15px 20px 10px 70px; z-index: 1000; align-items: flex-end;">
-        <a href="https://canalcocina.es/" target="_blank" title="Canal Cocina" style="text-decoration: none; text-align: center;">
-            <img src="https://i.ibb.co/9jk2DW7/Canalcocina.jpg" alt="Canal Cocina" style="width: 35px; height: 35px; display: block; margin: 0 auto; object-fit: contain;">
-            <span style="font-size: 0.6em; color: #333; font-weight: bold; display: block;">canalcocina</span>
+    <div style="display: flex; justify-content: flex-end; flex-wrap: wrap; gap: 10px; padding: 15px 20px 10px 70px; z-index: 1000; align-items: flex-end;">
+        <a href="https://canalcocina.es/" target="_blank" title="Canal Cocina" class="enlace-externo">
+            <img src="https://i.ibb.co/9jk2DW7/Canalcocina.jpg" alt="Canal Cocina" style="height: 26px; width: auto; object-fit: contain;">
+            <span>canalcocina</span>
         </a>
-        <a href="https://www.hogarmania.com/" target="_blank" title="Hogarmania" style="text-decoration: none; text-align: center;">
-            <img src="https://www.hogarmania.com/favicon.ico" alt="Icono Hogarmania" style="width: 24px; height: 24px; display: block; margin: 0 auto;">
-            <span style="font-size: 0.6em; color: #333; font-weight: bold; display: block;">hogarmania</span>
+        <a href="https://www.hogarmania.com/" target="_blank" title="Hogarmania" class="enlace-externo">
+            <img src="https://www.hogarmania.com/favicon.ico" alt="Icono Hogarmania" style="height: 24px; width: auto;">
+            <span>hogarmania</span>
         </a>
-        <a href="https://cookpad.com/es" target="_blank" title="Cookpad" style="text-decoration: none; text-align: center;">
-            <img src="https://cookpad.com/favicon.ico" alt="Icono Cookpad" style="width: 24px; height: 24px; display: block; margin: 0 auto;">
-            <span style="font-size: 0.6em; color: #333; font-weight: bold; display: block;">cookpad</span>
+        <a href="https://cookpad.com/es" target="_blank" title="Cookpad" class="enlace-externo">
+            <img src="https://cookpad.com/favicon.ico" alt="Icono Cookpad" style="height: 24px; width: auto;">
+            <span>cookpad</span>
         </a>
-        <a href="https://www.directoalpaladar.com/" target="_blank" title="Directo al Paladar" style="text-decoration: none; text-align: center;">
-            <img src="https://www.directoalpaladar.com/favicon.ico" alt="Icono Directo al Paladar" style="width: 24px; height: 24px; display: block; margin: 0 auto;">
-            <span style="font-size: 0.6em; color: #333; font-weight: bold; display: block;">paladar</span>
+        <a href="https://www.directoalpaladar.com/" target="_blank" title="Directo al Paladar" class="enlace-externo">
+            <img src="https://www.directoalpaladar.com/favicon.ico" alt="Icono Directo al Paladar" style="height: 24px; width: auto;">
+            <span>paladar</span>
         </a>
     </div>
 
-    <button id="menu-toggle" onclick="toggleSidebar()" style="position: fixed; top: 15px; left: 15px; z-index: 1001; background: #d35400; color: white; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer; font-size: 20px;">☰</button>
+    <button id="menu-toggle" onclick="toggleSidebar()" style="position: fixed; top: 15px; left: 15px; z-index: 1001; background: #b40000; color: white; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer; font-size: 20px;">☰</button>
 
     <button onclick="window.location.href=window.location.pathname+'?v='+new Date().getTime();" style="padding: 10px 15px; background-color: #556b46; color: white; border: none; border-radius: 8px; font-weight: bold; font-size: 1em; cursor: pointer; display: block; margin: 5px auto 25px auto;">
         🔄 Actualizar Recetario
@@ -97,11 +158,11 @@
     <aside class="sidebar">
         <div class="panel-lateral">
             <div class="seccion-lateral">
-                <div class="seccion-lateral" style="text-align: center; background: linear-gradient(135deg, #d35400, #e67e22); color: white; border-radius: 12px; padding: 15px; margin-bottom: 5px; box-shadow: 0 4px 10px rgba(211, 84, 0, 0.3);">
-    <span style="font-size: 0.75em; text-transform: uppercase; font-weight: bold; opacity: 0.9;">Mi Recetario</span>
-    <div id="contador-recetas" style="font-size: 2.2em; font-weight: bold; line-height: 1.2;">0</div>
-    <span style="font-size: 0.75em; opacity: 0.9;">Platos guardados</span>
-</div>
+                <div class="seccion-lateral" style="text-align: center; background: linear-gradient(135deg, #b40000, #ff4d4d); color: white; border-radius: 12px; padding: 15px; margin-bottom: 5px; box-shadow: 0 4px 10px rgba(180, 0, 0, 0.3);">
+                    <span style="font-size: 0.75em; text-transform: uppercase; font-weight: bold; opacity: 0.9;">Mi Recetario</span>
+                    <div id="contador-recetas" style="font-size: 2.2em; font-weight: bold; line-height: 1.2;">0</div>
+                    <span style="font-size: 0.75em; opacity: 0.9;">Platos guardados</span>
+                </div>
                 <h3>🔍 Filtros</h3>
                 <select id="sIng" onchange="sincronizarFiltros('sIng')">
                     <option value="Todos">Ingredientes</option>
@@ -158,7 +219,9 @@
     </aside>
 
     <main class="contenido">
-        <h1>El recetario de Mario y Esther 🍲</h1>
+        <div class="contenedor-titulo">
+            <h1 class="cinta-medieval">El recetario de Mario y Esther 🍲</h1>
+        </div>
         <div class="formulario">
             <h3 id="tituloForm">Nueva Receta</h3>
             <input type="hidden" id="idDoc">
@@ -315,12 +378,12 @@
         if (!mostrarLista && !idEspecifico) {
             caja.innerHTML = `
                 <div style="grid-column: 1 / -1; display: flex; flex-direction: column; gap: 20px; align-items: center;">
-                    <div style="width: 100%; text-align: center; padding: 20px; color: #7f8c8d; font-size: 1.1em; background: white; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); box-sizing: border-box;">
+                    <div style="width: 100%; text-align: center; padding: 20px; color: #7f8c8d; font-size: 1.1em; background: white; border-radius: 12px; border: 2px solid #000000; box-shadow: 0 10px 30px rgba(0,0,0,0.15); box-sizing: border-box;">
                         👆 Selecciona un filtro arriba o pulsa "👀 Ver todas" para comenzar a cocinar.
                     </div>
                     
-                    <div style="width: 100%; background: white; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); padding: 20px; box-sizing: border-box; text-align: center;">
-                        <img src="Foto_chef.png" fetchpriority="high" alt="Nuestros Chefs: Mario y Esther" style="max-width: 100%; height: auto; border-radius: 8px; object-fit: contain;">
+                    <div style="width: 100%; background: white; border-radius: 12px; border: 2px solid #000000; box-shadow: 0 10px 30px rgba(0,0,0,0.15); padding: 20px; box-sizing: border-box; text-align: center;">
+                        <img src="Foto_chef.jpg" fetchpriority="high" alt="Nuestros Chefs: Mario y Esther" style="max-width: 100%; height: auto; border-radius: 8px; object-fit: contain;">
                     </div>
                 </div>
             `;
@@ -747,5 +810,3 @@ async function guardarNota() {
     </div>
 </body>
 </html>
-
-
