@@ -17,11 +17,11 @@
         /* --- ESTILOS GENERALES (Con mantel de cuadros ROJOS Y BLANCOS INTENSOS) --- */
         body { 
             font-family: 'Segoe UI', sans-serif; 
-            background-color: #ffffff; /* Base blanca pura */
+            background-color: #ffffff; 
             background-image: 
-                linear-gradient(rgba(180, 0, 0, 0.2) 50%, transparent 50%), /* Rojo intenso, 20% opacidad */
+                linear-gradient(rgba(180, 0, 0, 0.2) 50%, transparent 50%), 
                 linear-gradient(90deg, rgba(180, 0, 0, 0.2) 50%, transparent 50%);
-            background-size: 50px 50px; /* Tamaño grande de cuadros Vichy */
+            background-size: 50px 50px; 
             margin: 0; 
             padding: 20px; 
             color: #333; 
@@ -39,66 +39,65 @@
         }
         .sidebar.active { transform: translateX(0); }
 
-        .panel-lateral { background: white; border-radius: 12px; padding: 20px; border: 2px solid #000000; box-shadow: 0 10px 30px rgba(0,0,0,0.15); display: flex; flex-direction: column; gap: 25px; }        
-        #bloc-notas { width: 100%; height: 120px; border: none; background: #fff9e6; padding: 10px; border-radius: 8px; font-family: inherit; resize: none; box-sizing: border-box; }
+        /* --- CAJAS PRINCIPALES Y MARCOS NEGROS --- */
+        .panel-lateral { background: white; border-radius: 12px; padding: 20px; border: 2px solid #000000; box-shadow: 0 10px 30px rgba(0,0,0,0.15); display: flex; flex-direction: column; gap: 25px; }
+        .formulario, .filtros-seccion { background: white; padding: 25px; border-radius: 12px; border: 2px solid #000000; box-shadow: 0 10px 30px rgba(0,0,0,0.15); margin-bottom: 25px; }
+        .tarjeta { background: white; border-radius: 12px; overflow: hidden; border: 2px solid #000000; box-shadow: 0 10px 25px rgba(0,0,0,0.15); display: flex; flex-direction: column; position: relative; }
+        
+        /* --- TAMAÑO FIJO DE LAS FOTOS DE LAS RECETAS (IMPORTANTE) --- */
+        .tarjeta img { width: 100%; height: 180px; object-fit: cover; border-bottom: 2px solid #000000; }
 
-        /* --- TÍTULO PRINCIPAL (Estilo Cinta Medieval) --- */
-        .contenedor-titulo { 
-            text-align: center; 
-            margin: 10px 0 40px 0; 
-            padding: 0 20px; 
-        }
-        .cinta-medieval {
-            display: inline-block;
-            position: relative;
-            background: #ffffff;
-            color: #b40000;
-            padding: 15px 40px;
-            margin: 0;
-            border: 2px solid #000000;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-            font-size: 2.2em;
-        }
-        /* Las colas de la cinta que van por detrás */
-        .cinta-medieval::before, .cinta-medieval::after {
-            content: '';
-            position: absolute;
-            top: 15px;
-            width: 40px;
-            height: 100%;
-            background: #e8e8e8; /* Gris clarito para dar sombra y profundidad */
-            border: 2px solid #000000;
-            z-index: -1;
-        }
-        .cinta-medieval::before {
-            left: -20px;
-            transform: skewY(15deg); /* Dobla la cola izquierda hacia abajo */
-        }
-        .cinta-medieval::after {
-            right: -20px;
-            transform: skewY(-15deg); /* Dobla la cola derecha hacia abajo */
-        }
-        .formulario, .filtros-seccion { background: white; padding: 25px; border-radius: 12px; border: 2px solid #000000; box-shadow: 0 10px 30px rgba(0,0,0,0.15); margin-bottom: 25px; }        .fila > * { flex: 1; min-width: 200px; }
+        /* --- COLUMNAS PARA LOS FORMULARIOS Y FILTROS (IMPORTANTE) --- */
         .fila { display: flex; gap: 15px; flex-wrap: wrap; margin-bottom: 15px; }
         .fila > * { flex: 1; min-width: 200px; }
+
         input, select { border: 1px solid #ddd; border-radius: 6px; padding: 12px; width: 100%; box-sizing: border-box; }
-        
         button { background-color: #27ae60; color: white; border: none; font-weight: bold; cursor: pointer; border-radius: 6px; padding: 12px; transition: 0.3s; }
         button:hover { background-color: #219150; }
 
-        .galeria { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px; }
-        .tarjeta { background: white; border-radius: 12px; overflow: hidden; border: 2px solid #000000; box-shadow: 0 10px 25px rgba(0,0,0,0.15); display: flex; flex-direction: column; position: relative; }        
-        .fav-btn { position: absolute; top: 10px; right: 10px; background: white; border: none; border-radius: 50%; width: 35px; height: 35px; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.2); font-size: 18px; z-index: 10; }
+        #bloc-notas { width: 100%; height: 120px; border: none; background: #fff9e6; padding: 10px; border-radius: 8px; font-family: inherit; resize: none; box-sizing: border-box; }
 
+        /* --- TÍTULO PRINCIPAL (Estilo Cinta Medieval) --- */
+        .contenedor-titulo { text-align: center; margin: 10px 0 40px 0; padding: 0 20px; }
+        .cinta-medieval {
+            display: inline-block; position: relative; background: #ffffff; color: #b40000;
+            padding: 15px 40px; margin: 0; border: 2px solid #000000; box-shadow: 0 10px 25px rgba(0,0,0,0.15); font-size: 2.2em;
+        }
+        .cinta-medieval::before, .cinta-medieval::after {
+            content: ''; position: absolute; top: 15px; width: 40px; height: 100%;
+            background: #e8e8e8; border: 2px solid #000000; z-index: -1;
+        }
+        .cinta-medieval::before { left: -20px; transform: skewY(15deg); }
+        .cinta-medieval::after { right: -20px; transform: skewY(-15deg); }
+
+        /* --- BOTÓN PARA CONTRAER/EXPANDIR FORMULARIO --- */
+        .btn-desplegar {
+            width: 100%; background-color: #d35400; color: white; border: 2px solid #000000;
+            padding: 15px 20px; border-radius: 12px; font-size: 1.1em; font-weight: bold;
+            cursor: pointer; margin-bottom: 15px; box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .btn-desplegar:hover { background-color: #b40000; }
+
+        .galeria { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px; }
+        .fav-btn { position: absolute; top: 10px; right: 10px; background: white; border: none; border-radius: 50%; width: 35px; height: 35px; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.2); font-size: 18px; z-index: 10; }
         .info { padding: 15px; flex-grow: 1; }
         .tag { font-size: 0.7em; color: white; padding: 4px 10px; border-radius: 20px; margin-right: 5px; display: inline-block; margin-top: 5px; font-weight: bold; }
         .tag-ing { background: #e67e22; } .tag-ela { background: #8e44ad; } .tag-tip { background: #2980b9; }
-
         .acciones { display: flex; border-top: 1px solid #eee; }
         .acciones button { flex: 1; border-radius: 0; padding: 10px; font-size: 0.8em; }
         .edit { background: #f39c12; } .del { background: #c0392b; }
 
-        /* Chat Estilo Original */
+        /* --- ESTILO PARA LOS ENLACES EXTERNOS --- */
+        .cabecera-top { display: flex; justify-content: flex-end; flex-wrap: wrap; gap: 10px; padding: 15px 20px 10px 70px; z-index: 1000; align-items: flex-end; }
+        .enlace-externo {
+            background-color: white; border: 2px solid #000000; border-radius: 8px;
+            padding: 6px 10px; text-decoration: none; display: flex; flex-direction: column;
+            align-items: center; justify-content: center; box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+        }
+        .enlace-externo span { font-size: 0.6em; color: #333; font-weight: bold; margin-top: 4px; }
+
+        /* --- Chat Estilo Original --- */
         #chat-container { position: fixed; bottom: 0; right: 0; width: 50vw; height: 100vh; background: white; box-shadow: -5px 0 30px rgba(0,0,0,0.3); display: none; flex-direction: column; z-index: 10000; border-left: 2px solid #b40000; }
         #chat-btn-open { position: fixed; bottom: 25px; right: 25px; background: #b40000; color: white; border: none; border-radius: 50%; width: 70px; height: 70px; cursor: pointer; font-size: 32px; box-shadow: 0 4px 20px rgba(0,0,0,0.4); z-index: 10001; display: flex; align-items: center; justify-content: center; }
         #chat-header { background-color: #b40000; color: white; padding: 20px; font-weight: bold; display: flex; justify-content: space-between; align-items: center; }
@@ -107,31 +106,24 @@
         .user-msg { background: #e1f5fe; align-self: flex-end; }
         .bot-msg { background: #f8f9fa; align-self: flex-start; border-left: 4px solid #b40000; }
 
-        /* --- ESTILO PARA LOS ENLACES EXTERNOS --- */
-        .enlace-externo {
-            background-color: white;
-            border: 2px solid #000000;
-            border-radius: 8px;
-            padding: 6px 10px;
-            text-decoration: none;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+        /* --- AJUSTES AUTOMÁTICOS PARA PANTALLAS DE MÓVIL --- */
+        @media (max-width: 900px) { 
+            #chat-container { width: 100vw; } 
+            .galeria { grid-template-columns: 1fr; } 
+            
+            /* Solución al solapamiento de la parte superior */
+            .cabecera-top { justify-content: center; padding-left: 60px; padding-right: 10px; }
+            .enlace-externo { padding: 4px 6px; }
+            .enlace-externo span { font-size: 0.5em; }
+            .enlace-externo img { height: 20px !important; }
+            .cinta-medieval { font-size: 1.4em; padding: 10px 20px; }
         }
-        .enlace-externo span {
-            font-size: 0.6em;
-            color: #333;
-            font-weight: bold;
-            margin-top: 4px;
-        }
-
-        @media (max-width: 900px) { #chat-container { width: 100vw; } .galeria { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
-    <div style="display: flex; justify-content: flex-end; flex-wrap: wrap; gap: 10px; padding: 15px 20px 10px 70px; z-index: 1000; align-items: flex-end;">
+    <button id="menu-toggle" onclick="toggleSidebar()" style="position: fixed; top: 15px; left: 15px; z-index: 1001; background: #b40000; color: white; border: 2px solid #000; padding: 10px 15px; border-radius: 5px; cursor: pointer; font-size: 20px;">☰</button>
+
+    <div class="cabecera-top">
         <a href="https://canalcocina.es/" target="_blank" title="Canal Cocina" class="enlace-externo">
             <img src="https://i.ibb.co/9jk2DW7/Canalcocina.jpg" alt="Canal Cocina" style="height: 26px; width: auto; object-fit: contain;">
             <span>canalcocina</span>
@@ -150,9 +142,7 @@
         </a>
     </div>
 
-    <button id="menu-toggle" onclick="toggleSidebar()" style="position: fixed; top: 15px; left: 15px; z-index: 1001; background: #b40000; color: white; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer; font-size: 20px;">☰</button>
-
-    <button onclick="window.location.href=window.location.pathname+'?v='+new Date().getTime();" style="padding: 10px 15px; background-color: #556b46; color: white; border: none; border-radius: 8px; font-weight: bold; font-size: 1em; cursor: pointer; display: block; margin: 5px auto 25px auto;">
+    <button onclick="window.location.href=window.location.pathname+'?v='+new Date().getTime();" style="padding: 10px 15px; background-color: #556b46; color: white; border: 2px solid #000; border-radius: 8px; font-weight: bold; font-size: 1em; cursor: pointer; display: block; margin: 5px auto 25px auto; box-shadow: 0 4px 10px rgba(0,0,0,0.15);">
         🔄 Actualizar Recetario
     </button>
 
@@ -160,7 +150,7 @@
     <aside class="sidebar">
         <div class="panel-lateral">
             <div class="seccion-lateral">
-                <div class="seccion-lateral" style="text-align: center; background: linear-gradient(135deg, #b40000, #ff4d4d); color: white; border-radius: 12px; padding: 15px; margin-bottom: 5px; box-shadow: 0 4px 10px rgba(180, 0, 0, 0.3);">
+                <div class="seccion-lateral" style="text-align: center; background: linear-gradient(135deg, #b40000, #ff4d4d); color: white; border-radius: 12px; border: 2px solid #000; padding: 15px; margin-bottom: 5px; box-shadow: 0 4px 10px rgba(180, 0, 0, 0.3);">
                     <span style="font-size: 0.75em; text-transform: uppercase; font-weight: bold; opacity: 0.9;">Mi Recetario</span>
                     <div id="contador-recetas" style="font-size: 2.2em; font-weight: bold; line-height: 1.2;">0</div>
                     <span style="font-size: 0.75em; opacity: 0.9;">Platos guardados</span>
@@ -224,7 +214,13 @@
         <div class="contenedor-titulo">
             <h1 class="cinta-medieval">El recetario de Mario y Esther 🍲</h1>
         </div>
-        <div class="formulario">
+
+        <button class="btn-desplegar" onclick="toggleFormulario()">
+            <span>➕ Añadir Nueva Receta</span>
+            <span id="icono-desplegable">▼</span>
+        </button>
+
+        <div class="formulario" id="caja-formulario" style="display: none;">
             <h3 id="tituloForm">Nueva Receta</h3>
             <input type="hidden" id="idDoc">
             <div class="fila"><input type="text" id="nombre" placeholder="Nombre de la receta"><input type="text" id="video" placeholder="Link del vídeo"></div>
@@ -263,7 +259,8 @@
                     <option value="Microondas">Microondas</option>
                     <option value="Sin cocinado">Sin cocinado</option>
                 </select>
-                <select id="tipo"><option value="Entrante">Entrante</option>
+                <select id="tipo">
+                    <option value="Entrante">Entrante</option>
                     <option value="Plato Principal">Plato Principal</option>
                     <option value="Postre">Postre</option>
                     <option value="Acompañamiento">Acompañamiento</option>
@@ -309,7 +306,8 @@
                     <option value="Microondas">Microondas</option>
                     <option value="Sin cocinado">Sin cocinado</option>
                 </select>
-                <select id="fTip" onchange="sincronizarFiltros('fTip')"><option value="Todos">Todos los Platos</option>
+                <select id="fTip" onchange="sincronizarFiltros('fTip')">
+                    <option value="Todos">Todos los Platos</option>
                     <option value="Entrante">Entrante</option>
                     <option value="Plato Principal">Plato Principal</option>
                     <option value="Postre">Postre</option>
@@ -376,7 +374,6 @@
         caja.innerHTML = '';
 
         // --- NUEVA REGLA DEL CERROJO ---
-        // Si el interruptor está apagado y no estamos buscando una receta favorita específica
         if (!mostrarLista && !idEspecifico) {
             caja.innerHTML = `
                 <div style="grid-column: 1 / -1; display: flex; flex-direction: column; gap: 20px; align-items: center;">
@@ -440,6 +437,19 @@
         actualizarSidebarFavs();
     }
 
+    // --- FUNCIONES NUEVAS Y EXISTENTES ---
+    function toggleFormulario() {
+        const form = document.getElementById('caja-formulario');
+        const icono = document.getElementById('icono-desplegable');
+        if (form.style.display === 'none') {
+            form.style.display = 'block';
+            icono.innerText = '▲';
+        } else {
+            form.style.display = 'none';
+            icono.innerText = '▼';
+        }
+    }
+
     async function toggleFav(id) {
         const receta = recetasLocales.find(r => r.id === id);
         if (receta) await db.collection("recetas").doc(id).update({ esFavorito: !receta.esFavorito });
@@ -481,7 +491,6 @@
     
     box.innerHTML += `<div class="msg user-msg">Chef, busca en internet la mejor forma de hacer **${r.nombre}** al ${r.elaboracion}</div>`;
 
-    // Simulación de búsqueda real
     setTimeout(() => {
         const typingId = "typing-" + Date.now();
         box.innerHTML += `<div class="msg bot-msg" id="${typingId}">🌐 Conectando con bases de datos gastronómicas...</div>`;
@@ -490,7 +499,6 @@
         setTimeout(() => {
             document.getElementById(typingId).remove();
             
-            // LÓGICA DE DATOS REALES SEGÚN INGREDIENTE Y ELABORACIÓN
             const datosCocina = obtenerDatosTecnicos(r.ingrediente, r.elaboracion);
             
             const respuestaChef = `
@@ -544,7 +552,6 @@
     input.value = '';
     box.scrollTop = box.scrollHeight;
 
-    // Efecto de búsqueda profunda
     const typingId = "typing-" + Date.now();
     box.innerHTML += `<div class="msg bot-msg" id="${typingId}">👨‍🍳 Buscando ingredientes, tiempos y técnicas para "${consulta}"...</div>`;
     
@@ -552,7 +559,6 @@
         const typingElem = document.getElementById(typingId);
         if(typingElem) typingElem.remove();
 
-        // Estructura de Receta Completa Profesional
         const respuestaChef = `
             <h2 style="color:#d35400; margin-top:0;">📖 Receta Maestra: ${consulta}</h2>
             
@@ -569,24 +575,18 @@
             </ul>
 
             <h3>👨‍🍳 Elaboración Detallada</h3>
-            <p><strong>Paso 1 (Mise en place):</strong> Corta todos los vegetales en <em>brunoise</em> (dados muy pequeños) y limpia bien el ingrediente principal. Seca la proteína con papel de cocina para asegurar un buen sellado.</p>
-            
-            <p><strong>Paso 2 (El sofrito):</strong> En una sartén amplia con el AOVE caliente, añade la cebolla y el pimiento. Cocina a fuego medio hasta que la cebolla esté traslúcida (unos 8 min). Añade el ajo al final para que no se queme.</p>
-            
-            <p><strong>Paso 3 (Cocción principal):</strong> Sube el fuego y añade el <strong>${consulta}</strong>. Sella por ambos lados hasta que esté dorado. Desglasa con el vino blanco rascando el fondo para recuperar los jugos caramelizados.</p>
-            
-            <p><strong>Paso 4 (Punto final):</strong> Baja el fuego y deja que reduzca el líquido. Si es carne, busca el punto deseado; si es verdura, que quede <em>al dente</em>.</p>
+            <p><strong>Paso 1 (Mise en place):</strong> Corta todos los vegetales en <em>brunoise</em> y limpia bien el ingrediente principal.</p>
+            <p><strong>Paso 2 (El sofrito):</strong> En una sartén amplia con el AOVE caliente, añade la cebolla y el pimiento.</p>
+            <p><strong>Paso 3 (Cocción principal):</strong> Sube el fuego y añade el <strong>${consulta}</strong>.</p>
+            <p><strong>Paso 4 (Punto final):</strong> Baja el fuego y deja que reduzca el líquido.</p>
 
             <h3>🍽️ Emplatado y Presentación</h3>
-            <p>Sirve en un plato llano grande. Coloca la guarnición de base y la pieza principal encima. Decora con un hilo de aceite de oliva virgen extra y una rama de perejil fresco o cebollino picado para dar altura y color.</p>
-
+            <p>Sirve en un plato llano grande. Coloca la guarnición de base y la pieza principal encima.</p>
             <hr style="border:0; border-top:1px solid #ddd; margin:15px 0;">
-
             🍎 <strong>Análisis Nutricional (Estimado):</strong><br>
             • <strong>Kcal:</strong> 420 | <strong>Proteína:</strong> 30g | <strong>Grasas:</strong> 15g | <strong>HC:</strong> 10g<br><br>
 
-            💡 <strong>Consejo de Mejora:</strong> Si quieres un sabor más profundo, añade una nuez de mantequilla fría justo al terminar la cocción y remueve para emulsionar la salsa.
-
+            💡 <strong>Consejo de Mejora:</strong> Si quieres un sabor más profundo, añade una nuez de mantequilla fría justo al terminar la cocción.
             <br><br>
             🚀 <strong>Guías Multimedia:</strong><br>
             <a href="https://www.youtube.com/results?search_query=receta+completa+${consulta}" target="_blank">🎬 YouTube</a> | 
@@ -601,9 +601,8 @@
 
     function toggleSidebar() { const s = document.querySelector('.sidebar'); s.classList.toggle('active'); }
     
-    // Función que se activa al elegir un filtro
     function sincronizarFiltros(id) { 
-        mostrarLista = true; // Abrimos el cerrojo
+        mostrarLista = true; 
         const val = document.getElementById(id).value; 
         const tipo = id.substring(1); 
         document.getElementById('f'+tipo).value = val; 
@@ -611,40 +610,35 @@
         renderizar(); 
     }
 
-    // Nueva función para el botón "Ver todas"
     function verTodasLasRecetas() {
-        mostrarLista = true; // Abrimos el cerrojo
-        
-        // Reiniciamos los selectores a su estado base
+        mostrarLista = true; 
         document.getElementById('fIng').value = 'Todos';
         document.getElementById('sIng').value = 'Todos';
         document.getElementById('fEla').value = 'Todas';
         document.getElementById('sEla').value = 'Todas';
         document.getElementById('fTip').value = 'Todos';
         document.getElementById('sTip').value = 'Todos';
-        
         renderizar();
     }
 
-    // Nueva función para limpiar los filtros y volver a la imagen inicial
     function limpiarFiltros() {
-        mostrarLista = false; // ¡Apagamos el interruptor para ocultar las recetas!
-        
-        // Reiniciamos todos los selectores a su estado base
+        mostrarLista = false; 
         document.getElementById('fIng').value = 'Todos';
         document.getElementById('sIng').value = 'Todos';
         document.getElementById('fEla').value = 'Todas';
         document.getElementById('sEla').value = 'Todas';
         document.getElementById('fTip').value = 'Todos';
         document.getElementById('sTip').value = 'Todos';
-        
-        // Recargamos la vista
         renderizar();
     }
 
     function verRecetaFav(id) { renderizar(id); toggleSidebar(); }
     
     function prepararEdicion(id) {
+        // Obligar al formulario a abrirse al editar
+        document.getElementById('caja-formulario').style.display = 'block';
+        document.getElementById('icono-desplegable').innerText = '▲';
+
         const r = recetasLocales.find(rec => rec.id === id);
         document.getElementById('idDoc').value = r.id;
         document.getElementById('nombre').value = r.nombre;
@@ -665,7 +659,6 @@
                     let width = img.width;
                     let height = img.height;
 
-                    // Calculamos las nuevas medidas manteniendo la proporción
                     if (width > height) {
                         if (width > maxWidth) { height *= maxWidth / width; width = maxWidth; }
                     } else {
@@ -676,8 +669,6 @@
                     canvas.height = height;
                     const ctx = canvas.getContext('2d');
                     ctx.drawImage(img, 0, 0, width, height);
-                    
-                    // Devolvemos la imagen comprimida en formato JPEG
                     resolve(canvas.toDataURL('image/jpeg', calidad));
                 };
             };
@@ -693,7 +684,6 @@
         
         let imgFinal = recetasLocales.find(r => r.id === id)?.imagen || "https://via.placeholder.com/300";
         
-        // MAGIA DE COMPRESIÓN ACTIVA
         if(archivo) {
             imgFinal = await comprimirImagen(archivo, 800, 800, 0.7);
         }
@@ -715,90 +705,82 @@
         document.getElementById('nombre').value = ''; 
         document.getElementById('video').value = '';
         document.getElementById('btnCan').style.display = "none"; 
+        
+        // Ocultar formulario de nuevo al guardar o cancelar
+        document.getElementById('caja-formulario').style.display = 'none';
+        document.getElementById('icono-desplegable').innerText = '▼';
     }
+
     function borrarReceta(id) { if(confirm("¿Borrar?")) db.collection("recetas").doc(id).delete(); }
     const bloc = document.getElementById('bloc-notas');
     bloc.value = localStorage.getItem('user_notas') || '';
     bloc.addEventListener('input', () => localStorage.setItem('user_notas', bloc.value));
 
     function compartirWhatsApp(id) {
-    const r = recetasLocales.find(rec => rec.id === id);
-    if (!r) return;
+        const r = recetasLocales.find(rec => rec.id === id);
+        if (!r) return;
 
-    const texto = `*¡Mira esta receta de nuestro recetario!* 🍲%0A%0A` +
-                  `*Plato:* ${r.nombre}%0A` +
-                  `*Ingrediente:* ${r.ingrediente}%0A` +
-                  `*Técnica:* ${r.elaboracion}%0A` +
-                  `*Tipo:* ${r.tipo}%0A%0A` +
-                  (r.video ? `🎬 *Vídeo:* ${r.video}%0A%0A` : '') +
-                  `👉 *Ver receta completa:* https://www.youtube.com/results?search_query=receta+${r.nombre.split(' ').join('+')}`;
+        const texto = `*¡Mira esta receta de nuestro recetario!* 🍲%0A%0A` +
+                      `*Plato:* ${r.nombre}%0A` +
+                      `*Ingrediente:* ${r.ingrediente}%0A` +
+                      `*Técnica:* ${r.elaboracion}%0A` +
+                      `*Tipo:* ${r.tipo}%0A%0A` +
+                      (r.video ? `🎬 *Vídeo:* ${r.video}%0A%0A` : '') +
+                      `👉 *Ver receta completa:* https://www.youtube.com/results?search_query=receta+${r.nombre.split(' ').join('+')}`;
 
-    window.open(`https://api.whatsapp.com/send?text=${texto}`, '_blank');
-}
-function obtenerDatosTecnicos(ing, ela) {
-    // Base de datos de conocimiento del Chef
-    const dbChef = {
-        "Pollo": { calorias: "230 kcal", proteina: "31g", ing: "• 2 Pechugas de pollo<br>• Sal, pimienta y pimentón<br>• 1 chorrito de AOVE" },
-        "Carne": { calorias: "280 kcal", proteina: "26g", ing: "• 300g de carne de ternera<br>• Romero y ajo<br>• Mantequilla o AOVE" },
-        "Pescado": { calorias: "180 kcal", proteina: "22g", ing: "• 1 lomo de pescado fresco<br>• Limón y eneldo<br>• Sal en escamas" },
-        "Verduras": { calorias: "120 kcal", proteina: "4g", ing: "• Verduras de temporada<br>• Salsa de soja o vinagreta<br>• Semillas de sésamo" },
-        "Pulpo": { calorias: "160 kcal", proteina: "30g", ing: "• 1 pata de pulpo cocido<br>• Pimentón de la Vera<br>• Aceite de oliva virgen extra" }
-    };
-
-    const info = dbChef[ing] || { calorias: "250 kcal", proteina: "20g", ing: "• Ingredientes variados según mercado" };
-    
-    // Ajustar tiempos y consejos según elaboración
-    let tPrep = "10 min", tCoccion = "20 min", paso = "", consejo = "";
-    
-    if(ela === "Horno") {
-        tCoccion = "45 min";
-        paso = `Precalienta a 200°C. Hornea el ${ing} en una bandeja amplia para que el calor circule.`;
-        consejo = "No abras el horno constantemente para no perder la temperatura residual.";
-    } else if(ela === "Airfryer") {
-        tCoccion = "18 min";
-        paso = `Introduce el ${ing} a 190°C. Agita el cestillo a mitad de cocción.`;
-        consejo = "Usa papel perforado para que la grasa drene pero el aire pase.";
-    } else {
-        tCoccion = "12 min";
-        paso = `Cocina a fuego medio-alto. Sella el ${ing} primero para caramelizar el exterior.`;
-        consejo = "Deja reposar la pieza 2 minutos antes de cortarla.";
+        window.open(`https://api.whatsapp.com/send?text=${texto}`, '_blank');
     }
 
-    return {
-        listaIngredientes: info.ing,
-        calorias: info.calorias,
-        proteina: info.proteina,
-        tPrep: tPrep,
-        tCoccion: tCoccion,
-        pasoAPaso: paso,
-        consejo: consejo
-    };
-}
-let idRecetaActualParaNota = null;
+    function obtenerDatosTecnicos(ing, ela) {
+        const dbChef = {
+            "Pollo": { calorias: "230 kcal", proteina: "31g", ing: "• 2 Pechugas de pollo<br>• Sal, pimienta y pimentón<br>• 1 chorrito de AOVE" },
+            "Carne": { calorias: "280 kcal", proteina: "26g", ing: "• 300g de carne de ternera<br>• Romero y ajo<br>• Mantequilla o AOVE" },
+            "Pescado": { calorias: "180 kcal", proteina: "22g", ing: "• 1 lomo de pescado fresco<br>• Limón y eneldo<br>• Sal en escamas" },
+            "Verduras": { calorias: "120 kcal", proteina: "4g", ing: "• Verduras de temporada<br>• Salsa de soja o vinagreta<br>• Semillas de sésamo" },
+            "Pulpo": { calorias: "160 kcal", proteina: "30g", ing: "• 1 pata de pulpo cocido<br>• Pimentón de la Vera<br>• Aceite de oliva virgen extra" }
+        };
 
-function abrirNotasReceta(id) {
-    idRecetaActualParaNota = id;
-    const r = recetasLocales.find(rec => rec.id === id);
-    document.getElementById('nota-titulo').innerText = "Notas: " + r.nombre;
-    document.getElementById('nota-texto').value = r.notasPersonales || "";
-    document.getElementById('modal-notas').style.display = 'flex';
-}
+        const info = dbChef[ing] || { calorias: "250 kcal", proteina: "20g", ing: "• Ingredientes variados según mercado" };
+        let tPrep = "10 min", tCoccion = "20 min", paso = "", consejo = "";
+        
+        if(ela === "Horno") {
+            tCoccion = "45 min";
+            paso = `Precalienta a 200°C. Hornea el ${ing} en una bandeja amplia.`;
+            consejo = "No abras el horno constantemente.";
+        } else if(ela === "Airfryer") {
+            tCoccion = "18 min";
+            paso = `Introduce el ${ing} a 190°C. Agita el cestillo a mitad de cocción.`;
+            consejo = "Usa papel perforado para que la grasa drene.";
+        } else {
+            tCoccion = "12 min";
+            paso = `Cocina a fuego medio-alto. Sella el ${ing} primero.`;
+            consejo = "Deja reposar la pieza 2 minutos antes de cortarla.";
+        }
 
-function cerrarNotas() {
-    document.getElementById('modal-notas').style.display = 'none';
-}
-
-async function guardarNota() {
-    const texto = document.getElementById('nota-texto').value;
-    try {
-        await db.collection("recetas").doc(idRecetaActualParaNota).update({
-            notasPersonales: texto
-        });
-        cerrarNotas();
-    } catch (error) {
-        alert("Error al guardar la nota");
+        return { listaIngredientes: info.ing, calorias: info.calorias, proteina: info.proteina, tPrep: tPrep, tCoccion: tCoccion, pasoAPaso: paso, consejo: consejo };
     }
-}
+
+    let idRecetaActualParaNota = null;
+
+    function abrirNotasReceta(id) {
+        idRecetaActualParaNota = id;
+        const r = recetasLocales.find(rec => rec.id === id);
+        document.getElementById('nota-titulo').innerText = "Notas: " + r.nombre;
+        document.getElementById('nota-texto').value = r.notasPersonales || "";
+        document.getElementById('modal-notas').style.display = 'flex';
+    }
+
+    function cerrarNotas() { document.getElementById('modal-notas').style.display = 'none'; }
+
+    async function guardarNota() {
+        const texto = document.getElementById('nota-texto').value;
+        try {
+            await db.collection("recetas").doc(idRecetaActualParaNota).update({ notasPersonales: texto });
+            cerrarNotas();
+        } catch (error) {
+            alert("Error al guardar la nota");
+        }
+    }
 </script>
 <div id="modal-notas" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:20000; align-items:center; justify-content:center;">
         <div style="background:white; padding:20px; border-radius:12px; width:90%; max-width:400px; box-shadow:0 10px 25px rgba(0,0,0,0.2);">
@@ -812,5 +794,3 @@ async function guardarNota() {
     </div>
 </body>
 </html>
-
-
