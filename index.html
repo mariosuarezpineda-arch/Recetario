@@ -44,10 +44,10 @@
         .formulario, .filtros-seccion { background: white; padding: 25px; border-radius: 12px; border: 2px solid #000000; box-shadow: 0 10px 30px rgba(0,0,0,0.15); margin-bottom: 25px; }
         .tarjeta { background: white; border-radius: 12px; overflow: hidden; border: 2px solid #000000; box-shadow: 0 10px 25px rgba(0,0,0,0.15); display: flex; flex-direction: column; position: relative; }
         
-        /* --- TAMAÑO FIJO DE LAS FOTOS DE LAS RECETAS (IMPORTANTE) --- */
+        /* --- TAMAÑO FIJO DE LAS FOTOS DE LAS RECETAS --- */
         .tarjeta img { width: 100%; height: 180px; object-fit: cover; border-bottom: 2px solid #000000; }
 
-        /* --- COLUMNAS PARA LOS FORMULARIOS Y FILTROS (IMPORTANTE) --- */
+        /* --- COLUMNAS PARA LOS FORMULARIOS Y FILTROS --- */
         .fila { display: flex; gap: 15px; flex-wrap: wrap; margin-bottom: 15px; }
         .fila > * { flex: 1; min-width: 200px; }
 
@@ -110,13 +110,12 @@
         @media (max-width: 900px) { 
             #chat-container { width: 100vw; } 
             .galeria { grid-template-columns: 1fr; } 
-            
-            /* Solución al solapamiento de la parte superior */
             .cabecera-top { justify-content: center; padding-left: 60px; padding-right: 10px; }
             .enlace-externo { padding: 4px 6px; }
             .enlace-externo span { font-size: 0.5em; }
             .enlace-externo img { height: 20px !important; }
             .cinta-medieval { font-size: 1.4em; padding: 10px 20px; }
+            .buscador-contenedor { flex-direction: column; } /* Apila botón y buscador en móvil si es necesario */
         }
     </style>
 </head>
@@ -272,7 +271,13 @@
         </div>
         
         <div class="filtros-seccion">
-            <h3 style="margin-top: 0;">Filtros</h3>
+            <h3 style="margin-top: 0;">🔍 Buscar y Filtrar</h3>
+            
+            <div class="fila buscador-contenedor" style="margin-bottom: 20px; display: flex; gap: 10px;">
+                <input type="text" id="buscadorTexto" onkeypress="if(event.key === 'Enter') buscarPorTexto()" placeholder="Buscar por nombre (ej. Ensalada, Arroz...)" style="flex: 1; border: 2px solid #000000; font-size: 1.1em; padding: 15px; border-radius: 8px; box-shadow: inset 0 2px 5px rgba(0,0,0,0.05);">
+                <button onclick="buscarPorTexto()" style="background-color: #d35400; padding: 0 25px; font-size: 1.1em; border: 2px solid #000000; box-shadow: 0 4px 10px rgba(0,0,0,0.15);">🔍 Buscar</button>
+            </div>
+
             <div class="fila">
                 <select id="fIng" onchange="sincronizarFiltros('fIng')">
                     <option value="Todos">Todos los Ingredientes</option>
@@ -315,8 +320,8 @@
                     <option value="Merienda">Merienda</option>
                 </select>
                 
-                <button onclick="verTodasLasRecetas()" style="background-color: #3498db; min-width: 150px;">👀 Ver todas</button>
-                <button onclick="limpiarFiltros()" style="background-color: #95a5a6; min-width: 150px;">🧹 Limpiar filtros</button>
+                <button onclick="verTodasLasRecetas()" style="background-color: #3498db; min-width: 150px; border: 2px solid #000000;">👀 Ver todas</button>
+                <button onclick="limpiarFiltros()" style="background-color: #95a5a6; min-width: 150px; border: 2px solid #000000;">🧹 Limpiar</button>
             </div>
         </div>
         
@@ -350,19 +355,15 @@
     const db = firebase.firestore();
     
     let recetasLocales = [];
-    let mostrarLista = false; // <-- NUESTRO NUEVO INTERRUPTOR APAGADO POR DEFECTO
+    let mostrarLista = false; 
 
-    // DIBUJAR LA PANTALLA INICIAL AL INSTANTE (Sin esperar a la base de datos)
     renderizar(); 
 
     db.collection("recetas").orderBy("fecha", "desc").onSnapshot((snapshot) => {
         recetasLocales = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        
-        // ¡Magia extra! Actualizamos el contador del menú lateral en segundo plano
         document.getElementById('contador-recetas').innerText = recetasLocales.length;
         actualizarSidebarFavs(); 
-
-        if (mostrarLista) renderizar(); // Solo dibuja las tarjetas si el cerrojo está abierto
+        if (mostrarLista) renderizar(); 
     });
 
     function renderizar(idEspecifico = null) {
@@ -371,14 +372,17 @@
         const fi = document.getElementById('fIng').value;
         const fe = document.getElementById('fEla').value;
         const ft = document.getElementById('fTip').value;
+        
+        // Capturamos el texto del buscador
+        const textoBuscado = document.getElementById('buscadorTexto') ? document.getElementById('buscadorTexto').value.toLowerCase() : '';
+
         caja.innerHTML = '';
 
-        // --- NUEVA REGLA DEL CERROJO ---
         if (!mostrarLista && !idEspecifico) {
             caja.innerHTML = `
                 <div style="grid-column: 1 / -1; display: flex; flex-direction: column; gap: 20px; align-items: center;">
                     <div style="width: 100%; text-align: center; padding: 20px; color: #7f8c8d; font-size: 1.1em; background: white; border-radius: 12px; border: 2px solid #000000; box-shadow: 0 10px 30px rgba(0,0,0,0.15); box-sizing: border-box;">
-                        👆 Selecciona un filtro arriba o pulsa "👀 Ver todas" para comenzar a cocinar.
+                        👆 Escribe en el buscador, selecciona un filtro o pulsa "👀 Ver todas" para comenzar a cocinar.
                     </div>
                     
                     <div style="width: 100%; background: white; border-radius: 12px; border: 2px solid #000000; box-shadow: 0 10px 30px rgba(0,0,0,0.15); padding: 20px; box-sizing: border-box; text-align: center;">
@@ -387,14 +391,17 @@
                 </div>
             `;
             actualizarSidebarFavs();
-            return; // Detenemos la función aquí
+            return; 
         }
 
         recetasLocales.forEach(r => {
-            if (idEspecifico ? String(r.id) === String(idEspecifico) : (fi === 'Todos' || r.ingrediente === fi) && (fe === 'Todas' || r.elaboracion === fe) && (ft === 'Todos' || r.tipo === ft)) {
+            // Comprobamos si cumple filtros y si el nombre contiene el texto buscado
+            const cumpleFiltros = (fi === 'Todos' || r.ingrediente === fi) && (fe === 'Todas' || r.elaboracion === fe) && (ft === 'Todos' || r.tipo === ft);
+            const cumpleTexto = r.nombre.toLowerCase().includes(textoBuscado);
+
+            if (idEspecifico ? String(r.id) === String(idEspecifico) : (cumpleFiltros && cumpleTexto)) {
                 const esFav = r.esFavorito === true; 
                 
-                // Aquí está la construcción de la tarjeta
                 caja.innerHTML += `
                     <div class="tarjeta" id="receta-${r.id}">
             <button class="fav-btn" onclick="toggleFav('${r.id}')">${esFav ? '❤️' : '🤍'}</button>
@@ -437,7 +444,12 @@
         actualizarSidebarFavs();
     }
 
-    // --- FUNCIONES NUEVAS Y EXISTENTES ---
+    // --- NUEVA FUNCION DEL BUSCADOR AL PULSAR EL BOTÓN ---
+    function buscarPorTexto() {
+        mostrarLista = true; 
+        renderizar();
+    }
+
     function toggleFormulario() {
         const form = document.getElementById('caja-formulario');
         const icono = document.getElementById('icono-desplegable');
@@ -478,126 +490,126 @@
     }
 
     function consultarReceta(id) {
-    const r = recetasLocales.find(rec => rec.id === id);
-    if (!r) return;
-    
-    const chat = document.getElementById('chat-container');
-    const btnOpen = document.getElementById('chat-btn-open');
-    const box = document.getElementById('chat-messages');
-    
-    box.innerHTML = ''; 
-    chat.style.display = 'flex';
-    btnOpen.style.display = 'none';
-    
-    box.innerHTML += `<div class="msg user-msg">Chef, busca en internet la mejor forma de hacer **${r.nombre}** al ${r.elaboracion}</div>`;
-
-    setTimeout(() => {
-        const typingId = "typing-" + Date.now();
-        box.innerHTML += `<div class="msg bot-msg" id="${typingId}">🌐 Conectando con bases de datos gastronómicas...</div>`;
-        box.scrollTop = box.scrollHeight;
+        const r = recetasLocales.find(rec => rec.id === id);
+        if (!r) return;
+        
+        const chat = document.getElementById('chat-container');
+        const btnOpen = document.getElementById('chat-btn-open');
+        const box = document.getElementById('chat-messages');
+        
+        box.innerHTML = ''; 
+        chat.style.display = 'flex';
+        btnOpen.style.display = 'none';
+        
+        box.innerHTML += `<div class="msg user-msg">Chef, busca en internet la mejor forma de hacer **${r.nombre}** al ${r.elaboracion}</div>`;
 
         setTimeout(() => {
-            document.getElementById(typingId).remove();
-            
-            const datosCocina = obtenerDatosTecnicos(r.ingrediente, r.elaboracion);
-            
+            const typingId = "typing-" + Date.now();
+            box.innerHTML += `<div class="msg bot-msg" id="${typingId}">🌐 Conectando con bases de datos gastronómicas...</div>`;
+            box.scrollTop = box.scrollHeight;
+
+            setTimeout(() => {
+                document.getElementById(typingId).remove();
+                
+                const datosCocina = obtenerDatosTecnicos(r.ingrediente, r.elaboracion);
+                
+                const respuestaChef = `
+                    <h2 style="color:#27ae60; margin-top:0;">🌐 Resultado de búsqueda: ${r.nombre}</h2>
+                    <p>He analizado varias fuentes y esta es la preparación óptima para un <strong>${r.tipo}</strong> usando <strong>${r.ingrediente}</strong>.</p>
+
+                    <div style="background:#f1f8e9; padding:15px; border-radius:10px; border-left:5px solid #2ecc71;">
+                        <h3>🛒 Lista de Ingredientes (Reales)</h3>
+                        <ul style="padding-left:20px;">
+                            ${datosCocina.listaIngredientes}
+                        </ul>
+                    </div>
+
+                    <h3>🔥 Técnica Maestra: ${r.elaboracion}</h3>
+                    <p>${datosCocina.pasoAPaso}</p>
+
+                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin:15px 0;">
+                        <div style="background:#e3f2fd; padding:10px; border-radius:8px; font-size:0.9em;">
+                            <strong>⏱️ Tiempos:</strong><br>
+                            Prep: ${datosCocina.tPrep}<br>
+                            Cocción: ${datosCocina.tCoccion}
+                        </div>
+                        <div style="background:#fff3e0; padding:10px; border-radius:8px; font-size:0.9em;">
+                            <strong>🍎 Nutrición (x ración):</strong><br>
+                            Calorías: ${datosCocina.calorias}<br>
+                            Proteína: ${datosCocina.proteina}
+                        </div>
+                    </div>
+
+                    💡 <strong>Consejo Pro:</strong> ${datosCocina.consejo}<br><br>
+
+                    🚀 <strong>Ver en plataformas:</strong><br>
+                    <a href="https://www.youtube.com/results?search_query=receta+${r.nombre.replace(/\s+/g, '+')}" target="_blank">🎬 YouTube</a> | 
+                    <a href="https://www.tiktok.com/search?q=${r.nombre.replace(/\s+/g, '+')}" target="_blank">📱 TikTok</a> | 
+                    <a href="https://www.instagram.com/explore/tags/${r.nombre.replace(/\s+/g, '')}" target="_blank">📸 Instagram</a>
+                `;
+                
+                box.innerHTML += `<div class="msg bot-msg">${respuestaChef}</div>`;
+                box.scrollTop = box.scrollHeight;
+            }, 1500);
+        }, 500);
+    }
+
+    async function preguntarChef() {
+        const input = document.getElementById('chat-input');
+        const consulta = input.value.trim();
+        if(!consulta) return;
+        
+        const box = document.getElementById('chat-messages');
+        box.innerHTML += `<div class="msg user-msg">Chef, búscame la receta completa de: **${consulta}**</div>`;
+        input.value = '';
+        box.scrollTop = box.scrollHeight;
+
+        const typingId = "typing-" + Date.now();
+        box.innerHTML += `<div class="msg bot-msg" id="${typingId}">👨‍🍳 Buscando ingredientes, tiempos y técnicas para "${consulta}"...</div>`;
+        
+        setTimeout(() => {
+            const typingElem = document.getElementById(typingId);
+            if(typingElem) typingElem.remove();
+
             const respuestaChef = `
-                <h2 style="color:#27ae60; margin-top:0;">🌐 Resultado de búsqueda: ${r.nombre}</h2>
-                <p>He analizado varias fuentes y esta es la preparación óptima para un <strong>${r.tipo}</strong> usando <strong>${r.ingrediente}</strong>.</p>
-
-                <div style="background:#f1f8e9; padding:15px; border-radius:10px; border-left:5px solid #2ecc71;">
-                    <h3>🛒 Lista de Ingredientes (Reales)</h3>
-                    <ul style="padding-left:20px;">
-                        ${datosCocina.listaIngredientes}
-                    </ul>
+                <h2 style="color:#d35400; margin-top:0;">📖 Receta Maestra: ${consulta}</h2>
+                
+                <div style="background:#fef9e7; padding:10px; border-radius:8px; margin-bottom:15px; font-size:0.9em;">
+                    ⏱️ <strong>Preparación:</strong> 15 min | 🍳 <strong>Cocción:</strong> 25-30 min | 👥 <strong>Raciones:</strong> 2 personas
                 </div>
 
-                <h3>🔥 Técnica Maestra: ${r.elaboracion}</h3>
-                <p>${datosCocina.pasoAPaso}</p>
+                <h3>🛒 Ingredientes y Cantidades</h3>
+                <ul style="padding-left:20px;">
+                    <li><strong>Proteína/Base:</strong> 400g de ${consulta}</li>
+                    <li><strong>Vegetales:</strong> 1 cebolla pequeña, 2 dientes de ajo, 1 pimiento.</li>
+                    <li><strong>Líquidos:</strong> 50ml de vino blanco o caldo, 2 cucharadas de AOVE.</li>
+                    <li><strong>Especias:</strong> Sal fina, pimienta negra recién molida, una pizca de pimentón o hierbas provenzales.</li>
+                </ul>
 
-                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin:15px 0;">
-                    <div style="background:#e3f2fd; padding:10px; border-radius:8px; font-size:0.9em;">
-                        <strong>⏱️ Tiempos:</strong><br>
-                        Prep: ${datosCocina.tPrep}<br>
-                        Cocción: ${datosCocina.tCoccion}
-                    </div>
-                    <div style="background:#fff3e0; padding:10px; border-radius:8px; font-size:0.9em;">
-                        <strong>🍎 Nutrición (x ración):</strong><br>
-                        Calorías: ${datosCocina.calorias}<br>
-                        Proteína: ${datosCocina.proteina}
-                    </div>
-                </div>
+                <h3>👨‍🍳 Elaboración Detallada</h3>
+                <p><strong>Paso 1 (Mise en place):</strong> Corta todos los vegetales en <em>brunoise</em> y limpia bien el ingrediente principal.</p>
+                <p><strong>Paso 2 (El sofrito):</strong> En una sartén amplia con el AOVE caliente, añade la cebolla y el pimiento.</p>
+                <p><strong>Paso 3 (Cocción principal):</strong> Sube el fuego y añade el <strong>${consulta}</strong>.</p>
+                <p><strong>Paso 4 (Punto final):</strong> Baja el fuego y deja que reduzca el líquido.</p>
 
-                💡 <strong>Consejo Pro:</strong> ${datosCocina.consejo}<br><br>
+                <h3>🍽️ Emplatado y Presentación</h3>
+                <p>Sirve en un plato llano grande. Coloca la guarnición de base y la pieza principal encima.</p>
+                <hr style="border:0; border-top:1px solid #ddd; margin:15px 0;">
+                🍎 <strong>Análisis Nutricional (Estimado):</strong><br>
+                • <strong>Kcal:</strong> 420 | <strong>Proteína:</strong> 30g | <strong>Grasas:</strong> 15g | <strong>HC:</strong> 10g<br><br>
 
-                🚀 <strong>Ver en plataformas:</strong><br>
-                <a href="https://www.youtube.com/results?search_query=receta+${r.nombre.replace(/\s+/g, '+')}" target="_blank">🎬 YouTube</a> | 
-                <a href="https://www.tiktok.com/search?q=${r.nombre.replace(/\s+/g, '+')}" target="_blank">📱 TikTok</a> | 
-                <a href="https://www.instagram.com/explore/tags/${r.nombre.replace(/\s+/g, '')}" target="_blank">📸 Instagram</a>
+                💡 <strong>Consejo de Mejora:</strong> Si quieres un sabor más profundo, añade una nuez de mantequilla fría justo al terminar la cocción.
+                <br><br>
+                🚀 <strong>Guías Multimedia:</strong><br>
+                <a href="https://www.youtube.com/results?search_query=receta+completa+${consulta}" target="_blank">🎬 YouTube</a> | 
+                <a href="https://www.tiktok.com/search?q=receta+${consulta}" target="_blank">📱 TikTok</a> | 
+                <a href="https://www.instagram.com/explore/tags/${consulta.replace(/\s+/g, '')}recipe" target="_blank">📸 Instagram</a>
             `;
             
             box.innerHTML += `<div class="msg bot-msg">${respuestaChef}</div>`;
             box.scrollTop = box.scrollHeight;
-        }, 1500);
-    }, 500);
-}
-
-    async function preguntarChef() {
-    const input = document.getElementById('chat-input');
-    const consulta = input.value.trim();
-    if(!consulta) return;
-    
-    const box = document.getElementById('chat-messages');
-    box.innerHTML += `<div class="msg user-msg">Chef, búscame la receta completa de: **${consulta}**</div>`;
-    input.value = '';
-    box.scrollTop = box.scrollHeight;
-
-    const typingId = "typing-" + Date.now();
-    box.innerHTML += `<div class="msg bot-msg" id="${typingId}">👨‍🍳 Buscando ingredientes, tiempos y técnicas para "${consulta}"...</div>`;
-    
-    setTimeout(() => {
-        const typingElem = document.getElementById(typingId);
-        if(typingElem) typingElem.remove();
-
-        const respuestaChef = `
-            <h2 style="color:#d35400; margin-top:0;">📖 Receta Maestra: ${consulta}</h2>
-            
-            <div style="background:#fef9e7; padding:10px; border-radius:8px; margin-bottom:15px; font-size:0.9em;">
-                ⏱️ <strong>Preparación:</strong> 15 min | 🍳 <strong>Cocción:</strong> 25-30 min | 👥 <strong>Raciones:</strong> 2 personas
-            </div>
-
-            <h3>🛒 Ingredientes y Cantidades</h3>
-            <ul style="padding-left:20px;">
-                <li><strong>Proteína/Base:</strong> 400g de ${consulta}</li>
-                <li><strong>Vegetales:</strong> 1 cebolla pequeña, 2 dientes de ajo, 1 pimiento.</li>
-                <li><strong>Líquidos:</strong> 50ml de vino blanco o caldo, 2 cucharadas de AOVE.</li>
-                <li><strong>Especias:</strong> Sal fina, pimienta negra recién molida, una pizca de pimentón o hierbas provenzales.</li>
-            </ul>
-
-            <h3>👨‍🍳 Elaboración Detallada</h3>
-            <p><strong>Paso 1 (Mise en place):</strong> Corta todos los vegetales en <em>brunoise</em> y limpia bien el ingrediente principal.</p>
-            <p><strong>Paso 2 (El sofrito):</strong> En una sartén amplia con el AOVE caliente, añade la cebolla y el pimiento.</p>
-            <p><strong>Paso 3 (Cocción principal):</strong> Sube el fuego y añade el <strong>${consulta}</strong>.</p>
-            <p><strong>Paso 4 (Punto final):</strong> Baja el fuego y deja que reduzca el líquido.</p>
-
-            <h3>🍽️ Emplatado y Presentación</h3>
-            <p>Sirve en un plato llano grande. Coloca la guarnición de base y la pieza principal encima.</p>
-            <hr style="border:0; border-top:1px solid #ddd; margin:15px 0;">
-            🍎 <strong>Análisis Nutricional (Estimado):</strong><br>
-            • <strong>Kcal:</strong> 420 | <strong>Proteína:</strong> 30g | <strong>Grasas:</strong> 15g | <strong>HC:</strong> 10g<br><br>
-
-            💡 <strong>Consejo de Mejora:</strong> Si quieres un sabor más profundo, añade una nuez de mantequilla fría justo al terminar la cocción.
-            <br><br>
-            🚀 <strong>Guías Multimedia:</strong><br>
-            <a href="https://www.youtube.com/results?search_query=receta+completa+${consulta}" target="_blank">🎬 YouTube</a> | 
-            <a href="https://www.tiktok.com/search?q=receta+${consulta}" target="_blank">📱 TikTok</a> | 
-            <a href="https://www.instagram.com/explore/tags/${consulta.replace(/\s+/g, '')}recipe" target="_blank">📸 Instagram</a>
-        `;
-        
-        box.innerHTML += `<div class="msg bot-msg">${respuestaChef}</div>`;
-        box.scrollTop = box.scrollHeight;
-    }, 2000);
-}
+        }, 2000);
+    }
 
     function toggleSidebar() { const s = document.querySelector('.sidebar'); s.classList.toggle('active'); }
     
@@ -612,6 +624,7 @@
 
     function verTodasLasRecetas() {
         mostrarLista = true; 
+        if(document.getElementById('buscadorTexto')) document.getElementById('buscadorTexto').value = '';
         document.getElementById('fIng').value = 'Todos';
         document.getElementById('sIng').value = 'Todos';
         document.getElementById('fEla').value = 'Todas';
@@ -623,6 +636,7 @@
 
     function limpiarFiltros() {
         mostrarLista = false; 
+        if(document.getElementById('buscadorTexto')) document.getElementById('buscadorTexto').value = '';
         document.getElementById('fIng').value = 'Todos';
         document.getElementById('sIng').value = 'Todos';
         document.getElementById('fEla').value = 'Todas';
@@ -635,7 +649,6 @@
     function verRecetaFav(id) { renderizar(id); toggleSidebar(); }
     
     function prepararEdicion(id) {
-        // Obligar al formulario a abrirse al editar
         document.getElementById('caja-formulario').style.display = 'block';
         document.getElementById('icono-desplegable').innerText = '▲';
 
@@ -706,7 +719,6 @@
         document.getElementById('video').value = '';
         document.getElementById('btnCan').style.display = "none"; 
         
-        // Ocultar formulario de nuevo al guardar o cancelar
         document.getElementById('caja-formulario').style.display = 'none';
         document.getElementById('icono-desplegable').innerText = '▼';
     }
